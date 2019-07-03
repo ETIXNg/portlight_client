@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="50dp"
+    android:id="@+id/SubmitAction"
+    android:orientation="vertical"
+    tools:context=".NoArtisansFoundActivity">
+
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="@string/no_artisans_were_found_for_the_following_services" />
+
+    <TextView
+        android:id="@+id/txt_services"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="services" />
+
+
+    <RadioGroup
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:checked="true"
+            android:id="@+id/rd_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/notify_me_when_artisan_is_available" />
+
+        <RadioButton
+            android:id="@+id/rd_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ignore" />
+
+    </RadioGroup>
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        app:roundedCorners="true"
+        app:showOutline="true"
+        app:bootstrapBrand="danger"
+        android:onClick="SubmitAction"
+        android:text="@string/submit"
+        />
+
+
+</LinearLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/linlay"
+    android:orientation="horizontal">
+
+    <TextView
+        android:textColor="#000"
+        android:textSize="10dp"
+        android:layout_weight="0.7"
+        android:id="@+id/txt_task_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="changing light bulb"/>
+
+    <TextView
+        android:textColor="#000"
+        android:textSize="10dp"
+        android:layout_weight="0.3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="12000"
+        android:id="@+id/txt_task_price"
+        />
+
+</LinearLayout>

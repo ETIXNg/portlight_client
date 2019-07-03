@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:background="#FFF2E5"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:id="@+id/linlay"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/img_artisan_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_worker" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_weight="0.8"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_artisan_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kudzai zishumba"
+            android:textColor="#000"
+            android:textSize="9dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_artisan_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0773303669"
+            android:textColor="#000"
+            android:textSize="9dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/lbl_artisan_skills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="carpentry"
+            android:textSize="9dp" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="true"
+            android:max="5"
+            android:numStars="5"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:stepSize="1"
+            android:transformPivotX="0dp"
+            android:transformPivotY="0dp" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

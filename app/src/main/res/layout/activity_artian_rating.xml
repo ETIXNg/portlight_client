@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linlay"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    tools:context=".ArtisanRatingActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_profile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_worker"
+            app:civ_border_color="#000"
+            app:civ_border_width="1dp" />
+
+
+        <TableLayout
+            android:id="@+id/linlay1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_profile"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+
+            <TableRow
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="0.5"
+                    android:gravity="left"
+                    android:text="@string/arriving_in_a_timely_manner"
+                    android:textColor="#000"
+                    android:textSize="10dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5">
+                    <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                        android:id="@+id/mrating_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srb_borderColor="@color/primary"
+                        app:srb_fillColor="@color/primary"
+                        app:srb_numberOfStars="5"
+                        app:srb_rating="5"
+                        app:srb_starBorderWidth="1"
+                        app:srb_starSize="15dp"
+                        app:srb_stepSize="1" />
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="0.5"
+                    android:gravity="left"
+                    android:text="@string/good_reception"
+                    android:textColor="#000"
+                    android:textSize="10dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5">
+
+                    <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                        android:id="@+id/mrating_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srb_borderColor="@color/primary"
+                        app:srb_fillColor="@color/primary"
+                        app:srb_numberOfStars="5"
+                        app:srb_rating="4"
+                        app:srb_starBorderWidth="1"
+                        app:srb_starSize="15dp"
+                        app:srb_stepSize="1" />
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="0.5"
+                    android:gravity="left"
+                    android:text="@string/did_the_job_well"
+                    android:textColor="#000"
+                    android:textSize="10dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5">
+
+                    <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                        android:id="@+id/mrating_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srb_borderColor="@color/primary"
+                        app:srb_fillColor="@color/primary"
+                        app:srb_numberOfStars="5"
+                        app:srb_rating="3"
+                        app:srb_starBorderWidth="1"
+                        app:srb_starSize="15dp"
+                        app:srb_stepSize="1" />
+                </LinearLayout>
+            </TableRow>
+
+
+            <TableRow
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="0.5"
+                    android:gravity="left"
+                    android:text="@string/fair_pricing"
+                    android:textColor="#000"
+                    android:textSize="10dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5">
+
+                    <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                        android:id="@+id/mrating_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srb_borderColor="@color/primary"
+                        app:srb_fillColor="@color/primary"
+                        app:srb_numberOfStars="5"
+                        app:srb_rating="2"
+                        app:srb_starBorderWidth="1"
+                        app:srb_starSize="15dp"
+                        app:srb_stepSize="1" />
+                </LinearLayout>
+            </TableRow>
+
+        </TableLayout>
+
+
+        <LinearLayout
+            android:id="@+id/lin_lay_over_all_rating"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_below="@+id/linlay1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/et_background"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/over_all_rating"
+
+                />
+
+            <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                android:id="@+id/over_all_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:srb_borderColor="@color/primary"
+                app:srb_fillColor="@color/primary"
+                app:srb_numberOfStars="5"
+                app:srb_isIndicator="true"
+                app:srb_starBorderWidth="1"
+                app:srb_starSize="15dp"
+                app:srb_stepSize="1" />
+
+
+        </LinearLayout>
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_below="@+id/lin_lay_over_all_rating"
+            android:layout_marginTop="35dp"
+            android:onClick="exec_complete_rating"
+            app:bootstrapBrand="danger"
+            app:bootstrapText="@string/rate_artisan"
+            app:roundedCorners="true"
+            app:showOutline="true" />
+
+    </RelativeLayout>
+
+</ScrollView>
+
+
+
