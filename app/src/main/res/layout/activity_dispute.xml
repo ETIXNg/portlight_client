@@ -22,14 +22,15 @@
         android:padding="20dp">
 
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.jackandphantom.circularimageview.CircleImage
             android:id="@+id/img_profile"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_worker"
-            app:civ_border_color="#000"
-            app:civ_border_width="1dp" />
+            app:add_shadow="true"
+            app:shadow_color="#000"
+            app:shadow_radius="10" />
 
 
         <LinearLayout

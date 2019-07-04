@@ -129,7 +129,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     public static boolean useNewLocation;//set to true if the user chooses to use a different location
     public static boolean LocationEnabled;//is the location enabled yes/no
 
-    static String tag = "ssf";
+    static String tag = "SearchServicesFragment";
 
     Looper _looper;
 
@@ -325,13 +325,14 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                                 mp.stop();//stop the media player
                                 rippleBackground.stopRippleAnimation();
                                 Toast.makeText(ctx, ctx.getString(R.string.error_occured_try_again), Toast.LENGTH_SHORT).show();
-                                Log.e("e", "ssf 427 " + e.getMessage() + " _" + e);
+                                Log.e(tag, "line 427 " + e.getMessage());
                                 return;//there was an error let it die
                             }
                         });
             } catch (Exception ex) {
                 mp.stop();
                 rippleBackground.stopRippleAnimation();
+                Log.e(tag,"line 335 "+ex.getMessage());
                 Snackbar.make(topView, ctx.getString(R.string.error_occured), Snackbar.LENGTH_LONG).show();
             }
 

@@ -79,17 +79,17 @@ public class mjobsAdapter extends RecyclerView.Adapter<mjobsAdapter.myViewHolder
         vh.txt_date_time.setText( TimeAgo.using(time_in_millis) );
         vh.txt_description.setText(job.description);
         if (i % 2 == 0) {//alternate the background color
-            vh.cardView.setCardBackgroundColor(act.getResources().getColor(R.color.primary));
+            vh.cardView.setCardBackgroundColor(act.getResources().getColor(R.color.light_grey_bg));
         } else {
-            vh.cardView.setCardBackgroundColor(act.getResources().getColor(R.color.primary_light));
+            vh.cardView.setCardBackgroundColor(act.getResources().getColor(R.color.white));
         }
 
         //load image into imageview
         Glide   .with(act)
                 .load(globals.base_url+"/fetch_artisan_profile_picture?artisan_app_id="+job.artisan_app_id)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                //.diskCacheStrategy(DiskCacheStrategy.NONE)
+                //.skipMemoryCache(true)
                 .placeholder(R.drawable.ic_worker)
                 .into(vh.img_artisan_icon);
 

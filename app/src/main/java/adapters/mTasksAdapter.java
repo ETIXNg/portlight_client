@@ -1,5 +1,7 @@
 package adapters;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.samaritan.portchlyt_services.R;
 import com.samaritan.portchlyt_services.ViewJobActivity;
+import com.samaritan.portchlyt_services.app;
 
 import org.w3c.dom.Text;
 
@@ -26,11 +29,13 @@ import models.mJobs.mTask;
 public class mTasksAdapter extends RecyclerView.Adapter<mTasksAdapter.myViewHolder> {
 
     mJobs job;
+    Context act;
     public mTasksAdapter(String _job_id)
     {
         Realm db = globals.getDB();
         job      = db.copyFromRealm(   db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst()  );
         db.close();
+        this.act= app.ctx;
     }
 
     @NonNull
@@ -43,10 +48,24 @@ public class mTasksAdapter extends RecyclerView.Adapter<mTasksAdapter.myViewHold
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
+
+
         mTasksAdapter.myViewHolder vh = (mTasksAdapter.myViewHolder) holder;
         mTask task = job.tasks.get(position);
         vh.txt_task_description.setText(task.description);
-        vh.txt_task_price.setText(task.price+"");
+        vh.txt_task_price.setText( globals.formatCurrency( task.price ) );
+
+        //highlight the background
+        if(position%2==0)
+        {
+            vh.linlay.setBackgroundColor(act.getResources().getColor(R.color.light_grey_bg));
+        }
+        else
+        {
+            vh.linlay.setBackgroundColor(act.getResources().getColor(R.color.white));
+        }
+
+
     }
 
     @Override

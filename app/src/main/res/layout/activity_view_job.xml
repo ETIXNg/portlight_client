@@ -11,174 +11,182 @@
         android:id="@+id/content_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/mtoolbar"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:background="@color/primary"
+            android:elevation="5dp"
+            app:subtitleTextColor="#fff"
+            app:theme="@style/ToolbarColoredBackArrow"
+            app:titleTextColor="#fff" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/mtoolbar"
-                android:layout_width="match_parent"
-                android:layout_height="57dp"
-                android:background="@color/primary"
-                android:elevation="5dp" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="@string/job_details"
-                android:textColor="#000"
-                android:textSize="10dp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                android:background="#000" />
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="85dp"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:background="@color/primary"
+                android:elevation="20dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
 
-
-                <TextView
-                    android:id="@+id/txt_service_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:shadowColor="#00F"
-                    android:text="Carpentry"
-                    android:textColor="#000"
-                    android:textSize="10dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txt_client_mobile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0773303669"
-                    android:textSize="10dp"
-                    android:textStyle="bold" />
-
-
+                <!--job detail layout -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:layout_weight="0.5"
+                    android:elevation="10dp"
+                    android:minHeight="85dp"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+
+                    <TextView
+                        android:id="@+id/txt_service_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:shadowColor="#00F"
+                        android:text="Carpentry"
+                        android:textColor="#fff"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_client_mobile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0773303669"
+                        android:textColor="#fff"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="0.5"
-                        android:orientation="vertical">
+                        android:layout_gravity="bottom"
+                        android:orientation="vertical"
+                        android:weightSum="1">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="2dp"
-                            android:capitalize="characters"
-                            android:text="@string/start_time"
-                            android:textColor="#000"
-                            android:textSize="10dp"
-                            android:textStyle="bold" />
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txt_start_time"
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="2dp"
+                                android:capitalize="characters"
+                                android:text="@string/start_time"
+                                android:textColor="#fff"
+                                android:textSize="10dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txt_start_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:capitalize="characters"
+                                android:text="11 00:am"
+                                android:textColor="#fff"
+                                android:textSize="10dp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:capitalize="characters"
-                            android:text="11 00:am"
-                            android:textSize="10dp"
-                            android:textStyle="bold" />
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="2dp"
+                                android:capitalize="characters"
+                                android:text="@string/end_time"
+                                android:textColor="#fff"
+                                android:textSize="10dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txt_end_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:capitalize="characters"
+                                android:text="- - - -"
+                                android:textColor="#fff"
+                                android:textSize="10dp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <TableLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="0.5"
-                        android:orientation="vertical">
+                        android:layout_marginTop="10dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="2dp"
-                            android:capitalize="characters"
-                            android:text="@string/end_time"
-                            android:textColor="#000"
-                            android:textSize="10dp"
-                            android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/txt_end_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:capitalize="characters"
-                            android:text="- - - -"
-                            android:textSize="10dp"
-                            android:textStyle="bold" />
+                        <TableRow android:weightSum="1">
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/txt_total_time"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:capitalize="characters"
+                                android:text="Total time: 18 hrs"
+                                android:textColor="#fff"
+                                android:textSize="10dp"
+                                android:textStyle="bold" />
 
+
+                        </TableRow>
+
+
+                    </TableLayout>
 
                 </LinearLayout>
 
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
 
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5">
 
-                    <TableRow android:weightSum="1">
+                    <com.jackandphantom.circularimageview.CircleImage
+                        android:id="@+id/img_profile"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_worker"
+                        app:add_shadow="true"
+                        app:shadow_color="#000"
+                        app:shadow_radius="10" />
 
-                        <TextView
-                            android:id="@+id/txt_total_time"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:capitalize="characters"
-                            android:text="Total time: 18 hrs"
-                            android:textColor="#000"
-                            android:textSize="10dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/lbl_total_price"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:capitalize="characters"
-                            android:text="Total time: 18 hrs"
-                            android:textColor="#000"
-                            android:textSize="10dp"
-                            android:textStyle="bold" />
-                    </TableRow>
-
-
-                </TableLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
 
+            <!--bills layout-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:elevation="15dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -186,6 +194,16 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/bills"
+                    android:textColor="#000"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/lbl_total_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Total price: 18.00"
                     android:textColor="#000"
                     android:textSize="10dp"
                     android:textStyle="bold" />
@@ -206,7 +224,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -223,7 +243,6 @@
                         android:textSize="10dp" />
 
 
-
                 </LinearLayout>
 
 
@@ -237,13 +256,13 @@
         </LinearLayout>
 
 
+        <!--layout for buttons-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:orientation="vertical"
-            android:padding="10dp"
-            >
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -289,8 +308,8 @@
                 android:id="@+id/btn_card_payment"
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
-                android:onClick="open_make_card_payment"
                 android:layout_marginBottom="10dp"
+                android:onClick="open_make_card_payment"
                 app:bootstrapBrand="success"
                 app:bootstrapText="@string/make_card_payment"
                 app:roundedCorners="true"

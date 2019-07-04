@@ -14,4 +14,10 @@ public class globals {
         return db;
     }
 
+    //get currency
+    public static String formatCurrency(double amount) {
+        String amount_currency = "₦"+String.format("%.2f",amount);
+        return amount_currency;
+    }
+
 }

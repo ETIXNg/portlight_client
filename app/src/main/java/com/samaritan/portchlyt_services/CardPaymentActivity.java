@@ -143,11 +143,14 @@ public class CardPaymentActivity extends AppCompatActivity {
                 run();
             } else if (resultCode == RavePayActivity.RESULT_ERROR) {
                 Toast.makeText(this,getString(R.string.error), Toast.LENGTH_SHORT).show();
+                finish();
             } else if (resultCode == RavePayActivity.RESULT_CANCELLED) {
                 Toast.makeText(this, getString(R.string.cancelled), Toast.LENGTH_SHORT).show();
+                finish();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+            finish();
         }
     }
 

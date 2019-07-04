@@ -13,10 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.bumptech.glide.Glide;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -70,6 +72,8 @@ public class ViewJobActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         getSupportActionBar().setTitle(getString(R.string.job_details));
 
+
+
         //
         lbl_total_price = (TextView) findViewById(R.id.lbl_total_price);
         txt_total_time = (TextView) findViewById(R.id.txt_total_time);
@@ -106,7 +110,27 @@ public class ViewJobActivity extends AppCompatActivity {
             btn_card_payment.setVisibility(View.GONE);//hide these two
             btn_cash_payment.setVisibility(View.GONE);
         }
+        String artisan_app_id = job.artisan_app_id;
         db.close();
+
+
+        //load image into view
+        //load artisan image
+        ImageView img_profile = (ImageView)findViewById(R.id.img_profile);
+        Glide.with(this)
+                .load(globals.base_url + "/fetch_artisan_profile_picture?artisan_app_id=" + artisan_app_id)
+                .centerCrop()
+                .placeholder(R.drawable.ic_worker)
+                .into(img_profile);
+        //
+        img_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent vp = new Intent(ViewJobActivity.this,ViewArtisanProfilePictureActivity.class);
+                vp.putExtra("artisan_app_id",artisan_app_id);
+                startActivity(vp);
+            }
+        });
 
 
     }//oncreate
@@ -151,7 +175,7 @@ public class ViewJobActivity extends AppCompatActivity {
     {
         Realm db=globals.getDB();
         mJobs job=db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
-        lbl_total_price.setText(app.ctx.getString(R.string.total_price)+": "+ job.getTheTotalPrice() + "");
+        lbl_total_price.setText(app.ctx.getString(R.string.total_price)+": "+ globals.formatCurrency( job.getTheTotalPrice() )  );
         if(job.getTheTotalPrice()>0)
         {
             tbl_lay.setVisibility(View.VISIBLE);
@@ -185,7 +209,7 @@ public class ViewJobActivity extends AppCompatActivity {
         int hours = p.getHours();
         int mins = p.getMinutes();
         txt_total_time.setText(
-                app.ctx.getString(R.string.total_time)+" "+ days + " " +   app.ctx.getString(R.string.days)
+                app.ctx.getString(R.string.total_time)+"\n"+ days + " " +   app.ctx.getString(R.string.days)
                         +" " + hours+" "+ app.ctx.getString(R.string.hrs)
                         +" " + mins +" " + app.ctx.getString(R.string.mins)
         );

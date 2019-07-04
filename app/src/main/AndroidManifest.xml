@@ -13,10 +13,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.Manifest.permission.READ_PHONE_STATE" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.Manifest.permission.READ_PHONE_STATE" />
-
 
     <application
         android:name=".app"
@@ -28,12 +26,13 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         android:windowSoftInputMode="stateHidden">
-        <activity android:name=".CardPaymentActivity"></activity>
+        <activity android:name=".ViewArtisanProfilePictureActivity"></activity>
+        <activity android:name=".CardPaymentActivity" />
         <activity android:name=".DisputeNotificationActivity" />
         <activity android:name=".DisputeActivity" />
         <activity
             android:name=".ArtisanRatingActivity"
-            android:theme="@style/MyDialogThemeModal"></activity>
+            android:theme="@style/MyDialogThemeModal" />
         <activity android:name=".CashPaymentActivity" />
         <activity android:name=".ViewJobActivity" />
 

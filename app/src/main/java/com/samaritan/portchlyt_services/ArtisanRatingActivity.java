@@ -14,11 +14,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
+import com.jackandphantom.circularimageview.CircleImage;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import globals.*;
 import io.realm.Realm;
 import models.mArtisan.mArtisan;
@@ -35,7 +35,7 @@ public class ArtisanRatingActivity extends AppCompatActivity {
     SimpleRatingBar mrating_3;
     SimpleRatingBar mrating_4;
     SimpleRatingBar over_all_rating;
-    CircleImageView img_profile;
+    CircleImage img_profile;
     ScrollView linlay;
 
     String _job_id;
@@ -53,7 +53,7 @@ public class ArtisanRatingActivity extends AppCompatActivity {
         mrating_3 = (SimpleRatingBar) findViewById(R.id.mrating_3);
         mrating_4 = (SimpleRatingBar) findViewById(R.id.mrating_4);
         over_all_rating = (SimpleRatingBar) findViewById(R.id.over_all_rating);
-        img_profile = (CircleImageView) findViewById(R.id.img_profile);
+        img_profile = (CircleImage) findViewById(R.id.img_profile);
         linlay = (ScrollView) findViewById(R.id.linlay);
 
         mrating_1.setOnRatingBarChangeListener(new SimpleRatingBar.OnRatingBarChangeListener() {

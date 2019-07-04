@@ -88,5 +88,6 @@
     <string name="cancelled">CANCELLED</string>
     <string name="error">ERROR</string>
     <string name="success">SUCCESS</string>
+    <string name="view_profile_picture">View profile picture</string>
 
 </resources>

@@ -44,6 +44,7 @@ public class CashPaymentActivity extends AppCompatActivity {
     TextView txt_artisan_name;
     LinearLayout linlay;
     String tag="CashPayment.java";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +63,7 @@ public class CashPaymentActivity extends AppCompatActivity {
         mJobs job = db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
 
 
-        txt_total_amount.setText("N "+job.getTheTotalPrice()+"");
+        txt_total_amount.setText( globals.formatCurrency( job.getTheTotalPrice() ) );
         txt_artisan_name.setText(job.artisan_name + " "+ job.artisan_mobile);
 
         //load image into imageview

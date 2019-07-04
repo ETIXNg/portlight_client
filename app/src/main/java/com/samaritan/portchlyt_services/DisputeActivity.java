@@ -20,11 +20,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.jackandphantom.circularimageview.CircleImage;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+
 import globals.*;
 import io.realm.Realm;
 import models.mJobs.mJobs;
@@ -41,7 +42,7 @@ public class DisputeActivity extends AppCompatActivity {
 
     String _job_id;
     String artisan_app_id;
-    CircleImageView img_profile;
+    CircleImage img_profile;
     TextInputLayout txt_label;
 
 
@@ -65,11 +66,11 @@ public class DisputeActivity extends AppCompatActivity {
         rd_1 = (RadioButton) findViewById(R.id.rd_1);
         rd_2 = (RadioButton) findViewById(R.id.rd_2);
         rd_3 = (RadioButton) findViewById(R.id.rd_3);
-        img_profile = (CircleImageView) findViewById(R.id.img_profile);
+        img_profile = (CircleImage) findViewById(R.id.img_profile);
         try {
 
             Glide.with(DisputeActivity.this)
-                    .load("http://192.168.138.1/portchlytAPI/apiService/fetch_artisan_profile_picture?artisan_app_id=8d47a543-4f82-4faf-b704-d4c3d7ec66fc")
+                    .load(globals.base_url+"/fetch_artisan_profile_picture?artisan_app_id="+artisan_app_id)
                     //.centerCrop()
                     .placeholder(R.drawable.ic_worker)
                     //.dontAnimate()
