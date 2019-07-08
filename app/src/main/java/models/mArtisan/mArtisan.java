@@ -31,7 +31,7 @@ public class mArtisan extends RealmObject {
     public String otp;
     public RealmList<String> skills = new RealmList<>();
     public RealmList<Referee> referees = new RealmList<>();
-    public RealmList<Integer> artisanRating = new RealmList<>();
+    public RealmList<artisanRating> artisanRating = new RealmList<>();
     public int numJobs;//the number of jobs that i have done
     public int myrating;
     public boolean registered;

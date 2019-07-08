@@ -42,12 +42,13 @@ public class ViewArtisanProfilePictureActivity extends AppCompatActivity {
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
         circularProgressDrawable.setStrokeWidth(5f);
         circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.setBackgroundColor(R.color.primary);
         circularProgressDrawable.start();
 
         Glide.with(this)
                 .load(globals.base_url + "/fetch_artisan_profile_picture?artisan_app_id=" + artisan_app_id)
                 .centerCrop()
-                .placeholder(circularProgressDrawable)
+                //.placeholder(circularProgressDrawable)
                 .into(img_profile);
 
 

@@ -82,7 +82,7 @@
 
     <string name="indicate_a_reason_for_the_dispute">Indicate a reason for the dispute</string>
     <string name="you_have_opened_a_dispute_our_team_will_respond_within_24_hrs">You have opened a dispute our team will respond within 24 hrs</string>
-    <string name="activity_dispute_notification">Activity dispute notification</string>
+    <string name="activity_dispute_notification">Dispute notification</string>
     <string name="open_a_dispute">Open a  dispute</string>
     <string name="thank_you_for_your_feedback">Thank you for your feedback</string>
     <string name="cancelled">CANCELLED</string>

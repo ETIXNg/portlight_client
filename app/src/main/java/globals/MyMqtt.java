@@ -94,25 +94,31 @@ public class MyMqtt {
 
                 if (type.equals("cash_payment_accepted_by_artisan")) {
                     //close this job
-
-                    String _job_id = json.getString("_job_id");
-                    Realm db2 = globals.getDB();
-                    mJobs job = db2.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
-                    db2.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            if (job.end_time == null) {//make sure we dont change the date again
-                                job.end_time = LocalDateTime.now().toString();//set the end time
-                                JobsFragment.refreshJobsAdapter();
-                                Intent rating = new Intent(app.ctx, ArtisanRatingActivity.class);
-                                rating.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                rating.putExtra("_job_id", _job_id);
-                                app.ctx.startActivity(rating);
+                    try {
+                        String _job_id = json.getString("_job_id");
+                        Realm db2 = globals.getDB();
+                        mJobs job = db2.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
+                        db2.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                if (job.end_time == null) {//make sure we dont change the date again
+                                    job.end_time = LocalDateTime.now().toString();//set the end time
+                                    JobsFragment.refreshJobsAdapter();
+                                    Intent rating = new Intent(app.ctx, ArtisanRatingActivity.class);
+                                    rating.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    rating.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    rating.putExtra("_job_id", _job_id);
+                                    app.ctx.startActivity(rating);
+                                }
                             }
-                        }
-                    });
-                    db2.close();
-                    Toast.makeText(app.ctx, app.ctx.getString(R.string.payment_recieved), Toast.LENGTH_SHORT).show();
+                        });
+                        db2.close();
+                        Toast.makeText(app.ctx, app.ctx.getString(R.string.payment_recieved), Toast.LENGTH_SHORT).show();
+                    } catch (Exception ex) {
+                        Log.e(tag,ex.getMessage());
+                        Toast.makeText(app.ctx,ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
                 if (type.equals("client_job_bill_notification")) {
@@ -150,7 +156,7 @@ public class MyMqtt {
                         String msg = json.getString("msg");
                         if (msg.equals("no_artisans_found")) {
                             Intent request = new Intent(app.ctx, NoArtisansFoundActivity.class);
-                            request.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            request.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             request.putExtra("request_id", json.getString("request_id"));
                             request.putExtra("data", json.getString("data"));
                             app.ctx.startActivity(request);
@@ -164,7 +170,8 @@ public class MyMqtt {
                             String jobs_accepted = json.getString("jobs_accepted");
                             String job_data = json.getString("job_data");
                             mArtisan artisan = new Gson().fromJson(json.getString("artisan_json_data"), mArtisan.class);
-                            SearchServicesFragment.DisplayAnArtisanThumbNail(artisan);//show this thumbnail with the correct jobs
+                            int artisan_rating = (int)json.getDouble("artisan_rating");
+                            SearchServicesFragment.DisplayAnArtisanThumbNail(artisan,artisan_rating);//show this thumbnail with the correct jobs
 
                             //also save this job to the db since it has been accepted by the artisan
                             //now save this job in the jobs place and open its activity straight away
@@ -185,9 +192,8 @@ public class MyMqtt {
                                         job.description = job_json.getString("requested_skills");//any notes the artian may want to note but initially indicate the skills
                                         db.insert(job);//save this request
                                         JobsFragment.refreshJobsAdapter();//display the job item in the jobs fragment
-                                    }catch (Exception ex)
-                                    {
-                                        Log.e(tag,ex.getMessage());
+                                    } catch (Exception ex) {
+                                        Log.e(tag, ex.getMessage());
                                     }
                                 }
                             });

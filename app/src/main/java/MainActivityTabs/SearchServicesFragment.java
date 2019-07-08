@@ -77,6 +77,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -115,6 +116,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     private GoogleMap googleMap;
 
     public static List<mArtisan> found_artisans;//the list of all the artisans found in this search
+    public static List<Integer>  found_artisans_rating;//the list of the ratings of the artisans
     static LinearLayout rel_results;
 
     String my_address = "";
@@ -279,6 +281,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
         //
         found_artisans = new ArrayList<mArtisan>();///init this prior to each search begins
+        found_artisans_rating = new ArrayList<Integer>();///init this prior to each search begins
+
         rel_results.setVisibility(View.GONE);//hide it
         topView.invalidate();
 
@@ -325,7 +329,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                                 mp.stop();//stop the media player
                                 rippleBackground.stopRippleAnimation();
                                 Toast.makeText(ctx, ctx.getString(R.string.error_occured_try_again), Toast.LENGTH_SHORT).show();
-                                Log.e(tag, "line 427 " + e.getMessage());
+                                Log.e(tag, "line 427 " + e);
                                 return;//there was an error let it die
                             }
                         });
@@ -377,20 +381,21 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     }
 
     //this method is to display a popup with the artisans location and job
-    public static void DisplayAnArtisanThumbNail(mArtisan artisan) {
+    public static void DisplayAnArtisanThumbNail(mArtisan artisan,int artisan_rating) {
         //stop the sound as soon as at least one artisan is found
         mp.stop();
 
         rel_results.setVisibility(View.VISIBLE);//show it
         RecyclerView lst_artisans_results = (RecyclerView) view.findViewById(R.id.lst_artisans_results);
         found_artisans.add(artisan);
+        found_artisans_rating.add(artisan_rating);
 
         //indicate the numeber of artisans found
         TextView txt_results = (TextView) view.findViewById(R.id.txt_results);
         txt_results.setText(found_artisans.size() + " " + ctx.getString(R.string.artisans_found_nearby));
 
 
-        foundArtisansAdapter fa_adapter = new foundArtisansAdapter(ctx, found_artisans);
+        foundArtisansAdapter fa_adapter = new foundArtisansAdapter(ctx, found_artisans,found_artisans_rating);
         lst_artisans_results.setAdapter(fa_adapter);
     }
 

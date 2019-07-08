@@ -31,11 +31,13 @@ import models.mArtisan.mArtisan;
 public class foundArtisansAdapter extends RecyclerView.Adapter<foundArtisansAdapter.MyHolder> {
 
     List<mArtisan> artisans;
+    List<Integer> artisans_rating;
     Context ctx;
-    String tag="faa";
+    String tag="foundArtisansAdapter";
 
-    public foundArtisansAdapter(Context ctx, List<mArtisan> artisans) {
+    public foundArtisansAdapter(Context ctx, List<mArtisan> artisans,List<Integer>artisans_rating) {
         this.artisans = artisans;
+        this.artisans_rating = artisans_rating;
         this.ctx = ctx;
     }
 
@@ -49,10 +51,12 @@ public class foundArtisansAdapter extends RecyclerView.Adapter<foundArtisansAdap
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         mArtisan artisan = artisans.get(position);
+        int artisan_rating = artisans_rating.get(position);
         //todo get the artisan image via glide library
         holder.lbl_artisan_skills.setText(TextUtils.join(" ",artisan.skills));
         holder.txt_artisan_name.setText(artisan.name);
         holder.txt_artisan_mobile.setText(artisan.mobile);
+        holder.ratingBar.setRating(artisan_rating);
         //set the image
         //load image into imageview
         Glide   .with(ctx)

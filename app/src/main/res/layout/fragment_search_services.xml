@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        app:rb_color="@color/primary_light"
+        app:rb_color="@color/primary_light_red"
         app:rb_duration="3000"
         app:rb_radius="32dp"
         app:rb_rippleAmount="4"
