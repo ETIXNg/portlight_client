@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.samaritan.portchlyt_services.R;
 
 import java.util.List;
@@ -140,7 +141,7 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
         public ImageView img_profile;
         public TextView txt_artisan_name;
         public TextView txt_skills;
-        public RatingBar ratingBar;
+        public SimpleRatingBar ratingBar;
         public TextView txt_num_jobs;
 
 
@@ -149,7 +150,7 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
             img_profile = (ImageView) v.findViewById(R.id.img_profile);
             txt_artisan_name = (TextView) v.findViewById(R.id.txt_artisan_name);
             txt_skills = (TextView) v.findViewById(R.id.txt_skills);
-            ratingBar = (RatingBar) v.findViewById(R.id.ratingBar);
+            ratingBar = (SimpleRatingBar) v.findViewById(R.id.ratingBar);
             txt_num_jobs = (TextView) v.findViewById(R.id.txt_num_jobs);
 
         }

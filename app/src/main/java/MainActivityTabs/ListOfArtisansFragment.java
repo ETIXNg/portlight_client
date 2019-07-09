@@ -163,7 +163,7 @@ public class ListOfArtisansFragment extends Fragment {
                                     artisans_list_data.add(artisan);//add to data set
                                     artisans_adapter.notifyItemInserted(artisans_list_data.size());//notify the adapter
                                 }
-
+                                page++;
                                 artisans_adapter.setLoaded();//set loaded
 
 

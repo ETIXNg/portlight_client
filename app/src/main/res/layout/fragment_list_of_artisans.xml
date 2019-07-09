@@ -4,45 +4,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="2dp"
+    android:padding="10dp"
     tools:context="MainActivityTabs.ListOfArtisansFragment">
 
-
-    <TextView
-        android:textSize="10dp"
-        android:text="@string/select_city"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
     <LinearLayout
-
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Spinner
-            android:id="@+id/spinner_city"
-            android:layout_width="match_parent"
-            android:layout_height="57dp"
-            android:entries="@array/cities" />
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+
+            <Spinner
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
+                android:spinnerMode="dialog"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp"
+                android:gravity="left"
+                android:scaleY="0.8"
+                android:scaleX="0.8"
+                android:id="@+id/spinner_city"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:entries="@array/cities" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <Spinner
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
+                android:spinnerMode="dialog"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp"
+                android:scaleY="0.8"
+                android:scaleX="0.8"
+                android:id="@+id/spinner_skill"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:entries="@array/job_categories" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
-    <TextView
-        android:textSize="10dp"
-        android:text="@string/select_a_job"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0.3dp"
+        android:background="#000"
+        android:alpha="0.3"/>
 
-    <LinearLayout
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Spinner
-            android:id="@+id/spinner_skill"
-            android:layout_width="match_parent"
-            android:layout_height="57dp"
-            android:entries="@array/job_categories" />
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
