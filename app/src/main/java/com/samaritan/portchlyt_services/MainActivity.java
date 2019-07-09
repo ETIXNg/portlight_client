@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import MainActivityTabs.JobsFragment;
+import MainActivityTabs.ListOfArtisansFragment;
 import MainActivityTabs.NewsFragment;
 import MainActivityTabs.SearchServicesFragment;
 import globals.MyMqtt;
@@ -67,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private void setTabIcons() {
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_time);//jobs
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_find);//search
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_comment);//blog
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_person_black_24dp);//blog
+
         tabLayout.getTabAt(1).select();//select the default tab
     }
 
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new JobsFragment(), getString(R.string.jobs));
         adapter.addFragment(new SearchServicesFragment(), getString(R.string.search));
-        adapter.addFragment(new NewsFragment(), getString(R.string.blog));
+        adapter.addFragment(new ListOfArtisansFragment(), getString(R.string.find_artisan));
         viewPager.setAdapter(adapter);
     }
 

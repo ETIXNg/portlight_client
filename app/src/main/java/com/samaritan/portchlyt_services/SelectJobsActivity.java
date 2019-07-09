@@ -4,13 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import MainActivityTabs.SearchServicesFragment;
 import adapters.skillsAdapter;
 
 public class SelectJobsActivity extends AppCompatActivity {
-    ListView lst_skills;
+    GridView lst_skills;
     skillsAdapter adp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +20,7 @@ public class SelectJobsActivity extends AppCompatActivity {
 
 
         try {
-            lst_skills = (ListView) findViewById(R.id.lst_skills);
+            lst_skills = (GridView) findViewById(R.id.lst_skills);
             String[] skills = getResources().getStringArray(R.array.job_categories);
             adp = new skillsAdapter(skills);
             lst_skills.setAdapter(adp);

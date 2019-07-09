@@ -25,4 +25,11 @@
         <item>Gas cooker repairs</item>
     </array>
 
+
+    <array name="cities">
+        <item>Abuja FCT</item>
+        <item>Lagos</item>
+        <item>Port Harcourt</item>
+    </array>
+
 </resources>

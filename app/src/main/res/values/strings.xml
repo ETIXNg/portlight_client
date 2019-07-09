@@ -11,7 +11,7 @@
     <string name="click_to_add_job">click to add job</string>
     <string name="add_job">Add job</string>
     <string name="search_job">Search job</string>
-    <string name="search_artisan">Search Artisan</string>
+    <string name="search_artisan">Search Artisan {fa_search}</string>
     <string name="address">Address</string>
     <string name="cannot_be_blank">Cannot be blank</string>
     <string name="select_a_job">Select a job</string>
@@ -89,5 +89,10 @@
     <string name="error">ERROR</string>
     <string name="success">SUCCESS</string>
     <string name="view_profile_picture">View profile picture</string>
+    <string name="find_artisan">artisans</string>
+    <string name="select_city">select city</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
