@@ -78,8 +78,8 @@ public class MyMqtt {
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                Log.e(tag, mqttMessage.toString() + " the message line 65");
-                Toast.makeText(ctx,mqttMessage.toString(),Toast.LENGTH_SHORT).show();
+                //Log.e(tag, mqttMessage.toString() + " the message line 65");
+                //Toast.makeText(ctx,mqttMessage.toString(),Toast.LENGTH_SHORT).show();
                 JSONObject json = null;
                 String type = "";
                 try {
@@ -99,9 +99,9 @@ public class MyMqtt {
                     String artisan_app_id = json.getString("artisan_app_id");
                     String artisan_lat = json.getString("artisan_lat");
                     String artisan_lng = json.getString("artisan_lng");
+                    String skill = json.getString("skill");
 
-                    Toast.makeText(app.ctx,json.toString(),Toast.LENGTH_SHORT).show();
-                    SearchServicesFragment.update_artisan_on_map(artisan_app_id,artisan_lat,artisan_lng);
+                    SearchServicesFragment.update_artisan_on_map(artisan_app_id,artisan_lat,artisan_lng,skill);
                 }
 
                 if (type.equals("cash_payment_accepted_by_artisan")) {

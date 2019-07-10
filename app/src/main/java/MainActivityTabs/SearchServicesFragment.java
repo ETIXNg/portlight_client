@@ -5,11 +5,16 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -59,6 +64,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -123,12 +129,15 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     MapView mMapView;
     private static GoogleMap googleMap;
+    static List<String>map_artisans;
 
     public static List<mArtisan> found_artisans;//the list of all the artisans found in this search
-    public static List<Integer>  found_artisans_rating;//the list of the ratings of the artisans
+    public static List<Integer> found_artisans_rating;//the list of the ratings of the artisans
     static LinearLayout rel_results;
 
     String my_address = "";
+
+    static Activity activity_context;
 
 
     static View view;
@@ -183,8 +192,11 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         relLay2 = (RelativeLayout) view.findViewById(R.id.relLay2);
         relLay2.setVisibility(View.GONE);
         topView.invalidate();//refresh
+        map_artisans = new ArrayList<>();
 
-        btn_find_now=(Button)view.findViewById(R.id.btn_find_now);
+        activity_context = getActivity();
+
+        btn_find_now = (Button) view.findViewById(R.id.btn_find_now);
         btn_find_now.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -199,7 +211,6 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                     //permission granted
                     execSearchForAtisan();
                 }
-
 
 
             }
@@ -245,14 +256,12 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             adp = new skillsAdapter(skills);
             lst_skills.setAdapter(adp);
             adp.notifyDataSetChanged();
-        }catch (Exception ex)
-        {
-            Log.e("d",ex.getMessage());
+        } catch (Exception ex) {
+            Log.e("d", ex.getMessage());
         }
 
 
         //
-
 
 
         //init location listners
@@ -260,11 +269,11 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(1*1000);
-        locationRequest.setFastestInterval(1*1000);
+        locationRequest.setInterval(1 * 1000);
+        locationRequest.setFastestInterval(1 * 1000);
 
 
-       init_location_listner();
+        init_location_listner();
         //
         relLay2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,7 +376,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             } catch (Exception ex) {
                 mp.stop();
                 rippleBackground.stopRippleAnimation();
-                Log.e(tag,"line 335 "+ex.getMessage());
+                Log.e(tag, "line 335 " + ex.getMessage());
                 Snackbar.make(topView, ctx.getString(R.string.error_occured), Snackbar.LENGTH_LONG).show();
             }
 
@@ -412,7 +421,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     }
 
     //this method is to display a popup with the artisans location and job
-    public static void DisplayAnArtisanThumbNail(mArtisan artisan,int artisan_rating) {
+    public static void DisplayAnArtisanThumbNail(mArtisan artisan, int artisan_rating) {
         //stop the sound as soon as at least one artisan is found
         mp.stop();
 
@@ -426,7 +435,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         txt_results.setText(found_artisans.size() + " " + ctx.getString(R.string.artisans_found_nearby));
 
 
-        foundArtisansAdapter fa_adapter = new foundArtisansAdapter(ctx, found_artisans,found_artisans_rating);
+        foundArtisansAdapter fa_adapter = new foundArtisansAdapter(ctx, found_artisans, found_artisans_rating);
         lst_artisans_results.setAdapter(fa_adapter);
     }
 
@@ -485,18 +494,15 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                 });
 
 
-
             }
 
         });
     }//.set_address
 
 
-
     //
     @SuppressLint("MissingPermission")
-    private void init_location_listner()
-    {
+    private void init_location_listner() {
         //
         locationCallback = new LocationCallback() {
             @Override
@@ -519,12 +525,12 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         };//location callback
 
         //
-        if(_looper==null) {
+        if (_looper == null) {
 
             //Looper.prepare();
             _looper = Looper.myLooper();
         }
-        mFusedLocationClient.requestLocationUpdates(locationRequest,locationCallback,_looper);
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, _looper);
 
     }
 
@@ -546,12 +552,46 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
 
     //set or update the artisan pointer on the screen
-    public static void update_artisan_on_map(String artisan_app_id, String artisan_lat,String artisan_lng)
-    {
-        double latitude = Double.parseDouble(artisan_lat);
-        double longitude = Double.parseDouble(artisan_lng);
-        Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)));
+    public static void update_artisan_on_map(String artisan_app_id, String artisan_lat, String artisan_lng,String skill) {
+
+        //dont add this if the artisan is already there
+        if(map_artisans.contains(artisan_app_id))return;
+        map_artisans.add(artisan_app_id);
+
+        try {
+            double latitude = Double.parseDouble(artisan_lat);
+            double longitude = Double.parseDouble(artisan_lng);
+
+
+            Marker marker = googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(latitude, longitude))
+                    .title(skill)
+                    //.snippet(skill)
+                    .rotation((float) 3.5)
+                    .icon(bitmapDescriptorFromVector(activity_context, R.drawable.ic_map_worker_icon)));
+        }catch (Exception ex)
+        {
+            //
+        }
     }
 
+    private static BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        try {
+
+            //original height of the marker
+            //vectorDrawable.getIntrinsicWidth(),
+            //vectorDrawable.getIntrinsicHeight()
+
+            Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+            vectorDrawable.setBounds(0, 0, 55, 55);
+            Bitmap bitmap = Bitmap.createBitmap(55, 55, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            vectorDrawable.draw(canvas);
+            return BitmapDescriptorFactory.fromBitmap(bitmap);
+        }catch (Exception ex){
+            Toast.makeText(activity_context,ex.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
 
 }//fragment
