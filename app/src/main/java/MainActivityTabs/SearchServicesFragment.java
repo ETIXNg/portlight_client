@@ -37,9 +37,12 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsoluteLayout;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,8 +59,10 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -86,6 +91,7 @@ import java.util.UUID;
 import javax.xml.transform.Result;
 
 import adapters.foundArtisansAdapter;
+import adapters.skillsAdapter;
 import globals.globals;
 import io.realm.Realm;
 import models.appSettings;
@@ -95,9 +101,12 @@ import models.mClient;
 //todo ensure google play services is up to date and working
 public class SearchServicesFragment extends Fragment implements OnMapReadyCallback {
 
-    ImageView img_search; //center image
     public static RippleBackground rippleBackground;//the riple background animation
     public static ArrayList<String> jobsList;
+    //
+    ListView lst_skills;
+    skillsAdapter adp;
+
     //
     static RelativeLayout relLay1, relLay2;
     static ConstraintLayout topView;
@@ -113,7 +122,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     TextView txt_location;
 
     MapView mMapView;
-    private GoogleMap googleMap;
+    private static GoogleMap googleMap;
 
     public static List<mArtisan> found_artisans;//the list of all the artisans found in this search
     public static List<Integer>  found_artisans_rating;//the list of the ratings of the artisans
@@ -132,6 +141,10 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     public static boolean LocationEnabled;//is the location enabled yes/no
 
     static String tag = "SearchServicesFragment";
+
+
+    //Button
+    Button btn_find_now;
 
     Looper _looper;
 
@@ -171,6 +184,27 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         relLay2.setVisibility(View.GONE);
         topView.invalidate();//refresh
 
+        btn_find_now=(Button)view.findViewById(R.id.btn_find_now);
+        btn_find_now.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //first check permision
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                } else {
+                    //permission granted
+                    execSearchForAtisan();
+                }
+
+
+
+            }
+        });
+
         //
         mMapView = (MapView) view.findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
@@ -179,7 +213,6 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
         //
         rippleBackground = (RippleBackground) view.findViewById(R.id.rippleBG);
-        img_search = (ImageView) view.findViewById(R.id.img_search);
         txt_location = (TextView) view.findViewById(R.id.txt_location);
 
 
@@ -205,23 +238,21 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             e.printStackTrace();
         }
 
+        //set up the grid
+        try {
+            lst_skills = (ListView) view.findViewById(R.id.lst_skills);
+            String[] skills = getResources().getStringArray(R.array.job_categories);
+            adp = new skillsAdapter(skills);
+            lst_skills.setAdapter(adp);
+            adp.notifyDataSetChanged();
+        }catch (Exception ex)
+        {
+            Log.e("d",ex.getMessage());
+        }
+
 
         //
-        img_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //first check permision
-                if (ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    // Permission is not granted
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                } else {
-                    //permission granted
-                    startActivity(new Intent(getActivity(), SelectJobsActivity.class));
-                }
-            }//.onclick
-        });//img_search onclick
+
 
 
         //init location listners
@@ -512,6 +543,15 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             }
         }
     }//.onrequest results
+
+
+    //set or update the artisan pointer on the screen
+    public static void update_artisan_on_map(String artisan_app_id, String artisan_lat,String artisan_lng)
+    {
+        double latitude = Double.parseDouble(artisan_lat);
+        double longitude = Double.parseDouble(artisan_lng);
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)));
+    }
 
 
 }//fragment

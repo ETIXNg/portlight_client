@@ -6,4 +6,6 @@ public class ListOfArtisansModel {
     public int num_of_jobs;
     public String skills;
     public int rating;
+    public double hourly_rate;
+    public String mobile;
 }

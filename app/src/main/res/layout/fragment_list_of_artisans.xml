@@ -10,50 +10,65 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:weightSum="12">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="5"
             android:orientation="vertical"
             android:padding="5dp">
 
 
             <Spinner
-                android:theme="@style/ThemeOverlay.AppCompat.Light"
-                android:spinnerMode="dialog"
-                android:transformPivotX="0dp"
-                android:transformPivotY="0dp"
-                android:gravity="left"
-                android:scaleY="0.8"
-                android:scaleX="0.8"
                 android:id="@+id/spinner_city"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:entries="@array/cities" />
+                android:entries="@array/cities"
+                android:gravity="left"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:spinnerMode="dialog"
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp" />
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="5"
             android:orientation="vertical"
             android:padding="5dp">
 
             <Spinner
-                android:theme="@style/ThemeOverlay.AppCompat.Light"
-                android:spinnerMode="dialog"
-                android:transformPivotX="0dp"
-                android:transformPivotY="0dp"
-                android:scaleY="0.8"
-                android:scaleX="0.8"
                 android:id="@+id/spinner_skill"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:entries="@array/job_categories" />
+                android:entries="@array/job_categories"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:spinnerMode="dialog"
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp" />
         </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/img_search"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_search_black_24dp" />
+        </RelativeLayout>
 
 
     </LinearLayout>
@@ -61,16 +76,46 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.3dp"
-        android:background="#000"
-        android:alpha="0.3"/>
+        android:alpha="0.3"
+        android:background="#000" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <RelativeLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="2dp" />
+        android:layout_height="0dp">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="2dp" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
+            android:layout_centerInParent="true" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:alpha="0.4"
+        android:id="@+id/lin_bottom"
+        android:background="@color/light_grey_bg"
+        android:orientation="vertical"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        android:layout_height="57dp">
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:text="@string/long_press_for_more_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
 </LinearLayout>

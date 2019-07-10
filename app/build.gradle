@@ -81,6 +81,7 @@ dependencies {
     implementation 'com.github.Flutterwave:rave-android:1.0.37'
     implementation 'androidx.paging:paging-runtime:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'com.sothree.slidinguppanel:library:3.3.0'
 
 
 }

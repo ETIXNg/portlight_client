@@ -65,7 +65,7 @@ public class skillsAdapter extends BaseAdapter {
 
 
         //
-        ImageView img_item = (ImageView) v.findViewById(R.id.img_item);
+        /*ImageView img_item = (ImageView) v.findViewById(R.id.img_item);
         if (skill.equals("Carpentry"))
             img_item.setImageDrawable(app.ctx.getResources().getDrawable(R.drawable.ic_carpentry));
         if (skill.equals("Electricals"))
@@ -110,7 +110,7 @@ public class skillsAdapter extends BaseAdapter {
             img_item.setImageDrawable(app.ctx.getResources().getDrawable(R.drawable.ic_gas_cooker));
         if (skill.equals("Plumbing"))
             img_item.setImageDrawable(app.ctx.getResources().getDrawable(R.drawable.ic_plumbing));
-
+*/
 
         final CheckBox chk_skill = (CheckBox) v.findViewById(R.id.chk_skill);
 

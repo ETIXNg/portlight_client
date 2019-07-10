@@ -67,6 +67,7 @@ public class MyMqtt {
         mqttClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
+                subscribeToTopic("general_updates", 0);//subscription for general updates
                 subscribeToTopic(clientId, 0);//this subscription is for the communication between the server and this client use a different topic for those messages wich do not require realtime, since this one requires real time it must subscribe to qos 0
             }
 
@@ -77,8 +78,8 @@ public class MyMqtt {
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                //Log.e(tag, mqttMessage.toString() + " the message line 65");
-                ///Toast.makeText(ctx,mqttMessage.toString(),Toast.LENGTH_SHORT).show();
+                Log.e(tag, mqttMessage.toString() + " the message line 65");
+                Toast.makeText(ctx,mqttMessage.toString(),Toast.LENGTH_SHORT).show();
                 JSONObject json = null;
                 String type = "";
                 try {
@@ -91,6 +92,17 @@ public class MyMqtt {
 
                 //route the message to the correct handler
 
+
+                //apdate the artisan icon on the map
+                if(type.equals("artisan_on_map_update"))
+                {
+                    String artisan_app_id = json.getString("artisan_app_id");
+                    String artisan_lat = json.getString("artisan_lat");
+                    String artisan_lng = json.getString("artisan_lng");
+
+                    Toast.makeText(app.ctx,json.toString(),Toast.LENGTH_SHORT).show();
+                    SearchServicesFragment.update_artisan_on_map(artisan_app_id,artisan_lat,artisan_lng);
+                }
 
                 if (type.equals("cash_payment_accepted_by_artisan")) {
                     //close this job

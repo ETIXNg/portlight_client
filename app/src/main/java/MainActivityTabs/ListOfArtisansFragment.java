@@ -1,9 +1,13 @@
 package MainActivityTabs;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -17,12 +21,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 import com.samaritan.portchlyt_services.R;
+import com.samaritan.portchlyt_services.app;
 
 import org.json.JSONArray;
 
@@ -43,6 +51,11 @@ public class ListOfArtisansFragment extends Fragment {
     RecyclerView recyclerView;
     mList_of_Artisans_Adapter artisans_adapter;
     static int page = 1;
+    ImageView img_search;
+    ProgressBar progress_bar;
+
+    static Activity activity_context;
+    RelativeLayout lin_bottom;
 
 
     private static final String tag = "ListOfArtisansFragment";
@@ -69,16 +82,38 @@ public class ListOfArtisansFragment extends Fragment {
         spinner_city = (Spinner) v.findViewById(R.id.spinner_city);
         spinner_skill = (Spinner) v.findViewById(R.id.spinner_skill);
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-        artisans_list_data= new ArrayList<>();
+        artisans_list_data = new ArrayList<>();
+        activity_context = getActivity();
+        lin_bottom  = (RelativeLayout)v.findViewById(R.id.lin_bottom);
+        lin_bottom .setVisibility(View.GONE);
+
+        //
+        progress_bar = (ProgressBar) v.findViewById(R.id.progress_bar);
+        progress_bar.setVisibility(View.GONE);
+
+        //
+        img_search = (ImageView) v.findViewById(R.id.img_search);
+        img_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //reset the page to 1 and clear the current list
+                page = 1;
+                artisans_list_data.clear();
+                get_more_data();
+            }
+        });
 
         //
         RecyclerView.LayoutManager lm = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(lm);
         recyclerView.setHasFixedSize(true);
 
+
         //
         get_more_data();
         artisans_adapter = new mList_of_Artisans_Adapter(getActivity(), artisans_list_data, recyclerView);
+        artisans_adapter.setHasStableIds(true);
         recyclerView.setAdapter(artisans_adapter);
 
         artisans_adapter.setOnLoadMoreListener(new mList_of_Artisans_Adapter.OnLoadMoreListener() {
@@ -135,7 +170,12 @@ public class ListOfArtisansFragment extends Fragment {
     }
 
 
+    //only get more data and increment the page
     private void get_more_data() {
+
+
+
+        progress_bar.setVisibility(View.VISIBLE);
         String city = spinner_city.getSelectedItem().toString();
         String skill = spinner_skill.getSelectedItem().toString();
 
@@ -147,12 +187,23 @@ public class ListOfArtisansFragment extends Fragment {
                 .asString()
                 .withResponse()
                 .setCallback((e, result) -> {
+
+                    //delay dismissing the progress bar for a second
+                    Handler h = new Handler();
+                    h.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress_bar.setVisibility(View.GONE);
+                        }
+                    }, 1000);
+
+
                     if (e == null) {
                         if (result == null) {
                             Log.e(tag, "line 136 result is null");
                             return;
                         } else {
-                            Log.e(tag,"result "+result.getResult());
+                            Log.e(tag, "result " + result.getResult());
                             try {
 
                                 artisans_adapter.notifyItemRemoved(artisans_list_data.size());//tell it that we have removed the progress loading item
@@ -170,12 +221,58 @@ public class ListOfArtisansFragment extends Fragment {
                             } catch (Exception ex) {
                                 Log.e(tag, "line 148 " + ex.getLocalizedMessage());
                             }
+                            if(artisans_list_data.size()>0)
+                            {
+                                lin_bottom.setVisibility(View.VISIBLE);
+                            }
+                            else
+                            {
+                                lin_bottom.setVisibility(View.GONE);
+                            }
                         }
                     } else {
                         Log.e(tag, "line 138 " + e.getLocalizedMessage());
                     }
                 });
     }//.get_more_data
+
+
+    //how do you want to contact this artisan
+    public static void show_artisan_contact_dialog(ListOfArtisansModel artisan) {
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(activity_context);
+        pictureDialog.setTitle(activity_context.getResources().getString(R.string.contact) + " " + artisan.name);
+        String[] pictureDialogItems = {
+                activity_context.getResources().getString(R.string.call),
+                activity_context.getResources().getString(R.string.sms)
+        };
+
+        pictureDialog.setItems(pictureDialogItems,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+
+
+                                Intent call = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", artisan.mobile, null));
+                                activity_context.startActivity(call);
+
+
+                                break;
+                            case 1:
+                                Intent sms = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("smsto", artisan.mobile, null));
+                                activity_context.startActivity(sms);
+                                break;
+                        }
+                    }
+                });
+        try {
+            pictureDialog.show();
+        }catch (Exception ex)
+        {
+            Log.e(tag,"line 258 "+ex.getMessage());
+        }
+    }
 
 
 }//fragment
