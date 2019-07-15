@@ -84,6 +84,7 @@ import com.samaritan.portchlyt_services.R;
 import com.samaritan.portchlyt_services.SelectJobsActivity;
 import com.samaritan.portchlyt_services.app;
 import com.skyfishjy.library.RippleBackground;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -152,7 +153,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     public static boolean useNewLocation;//set to true if the user chooses to use a different location
     public static boolean LocationEnabled;//is the location enabled yes/no
 
-    static SlidingPaneLayout sliding_layout;
+    static SlidingUpPanelLayout sliding_layout;
 
     static String tag = "SearchServicesFragment";
 
@@ -189,7 +190,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         //
         view = inflater.inflate(R.layout.fragment_search_services, container, false);
         topView = (ConstraintLayout) view.findViewById(R.id.topView);
-        sliding_layout = (SlidingPaneLayout) view.findViewById(R.id.sliding_layout);
+        sliding_layout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
 
         //
         rel_results = (LinearLayout) view.findViewById(R.id.rel_results);
@@ -357,7 +358,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
                 //
                 rippleBackground.startRippleAnimation();
-                sliding_layout.closePane();
+                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);//collapse the panel
 
                 //also play the sound to show the search is on going
                 mp = MediaPlayer.create(ctx, R.raw.unsure);

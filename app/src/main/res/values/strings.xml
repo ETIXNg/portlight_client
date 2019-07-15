@@ -99,7 +99,7 @@
     <string name="contact">Contact</string>
     <string name="call">Call</string>
     <string name="sms">SMS</string>
-    <string name="long_press_for_more_options">long press for more options</string>
+    <string name="click_for_more_options">click for more options</string>
     <string name="close">close</string>
     <string name="unknown_location">Unknown location?</string>
     <string name="per_hr">/hr</string>
@@ -110,5 +110,7 @@
     <string name="bad_service">bad service</string>
     <string name="too_expensive">too expensive</string>
     <string name="this_job_was_cancelled">this job was cancelled</string>
+    <string name="wrong_order">wrong order</string>
+    <string name="cancel_job">Cancel job</string>
 
 </resources>

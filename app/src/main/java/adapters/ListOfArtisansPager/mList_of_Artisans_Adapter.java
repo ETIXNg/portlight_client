@@ -128,12 +128,10 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
 
 
         //long press to open this option
-        holder.lin_lay.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.lin_lay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-
+            public void onClick(View view) {
                 ListOfArtisansFragment.show_artisan_contact_dialog(artisan);
-                return false;
             }
         });
 

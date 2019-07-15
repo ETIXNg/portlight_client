@@ -56,6 +56,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/too_expensive" />
 
+            <RadioButton
+                android:id="@+id/rd_4"
+                android:elevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wrong_order" />
+
 
         </RadioGroup>
 

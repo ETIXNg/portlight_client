@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -128,15 +130,20 @@ public class RegisterActivity extends AppCompatActivity {
                                     String res = "";
                                     String msg = "";
                                     String otp = "";
+                                    String app_id="";
                                     try{res= new JSONObject(result.getResult()).getString("res");}catch (Exception ex){}
                                     try{msg= new JSONObject(result.getResult()).getString("msg");}catch (Exception ex){}
                                     try{otp= new JSONObject(result.getResult()).getString("otp");}catch (Exception ex){}
+                                    try{app_id = new JSONObject(result.getResult()).getString("app_id");}catch (Exception ex){}
 
                                     if (res.equals("ok")) {
                                         // to the next activity to confirm the otp pin
                                         mClient m = db.where(mClient.class).findFirst();
                                         db.beginTransaction();
                                         m.otp = otp;
+                                        if(!TextUtils.isEmpty(app_id)) {//maintain the app id since this number if coming back
+                                            m.app_id = app_id;
+                                        }
                                         db.commitTransaction();//this auto saves the thing
                                         startActivity(new Intent(RegisterActivity.this, ConfirmOTPActivity.class));
                                     } else {

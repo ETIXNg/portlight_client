@@ -32,7 +32,7 @@ public class CancelJobActivity extends AppCompatActivity {
     String _job_id;
     String client_app_id;
     String artisan_app_id;
-    RadioButton rd_1, rd_2, rd_3;
+    RadioButton rd_1, rd_2, rd_3, rd_4;
     View contextView;
 
     @Override
@@ -50,11 +50,12 @@ public class CancelJobActivity extends AppCompatActivity {
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
-        getSupportActionBar().setTitle(getString(R.string.job_details));
+        getSupportActionBar().setTitle(getString(R.string.cancel_job));
 
         rd_1 = (RadioButton) findViewById(R.id.rd_1);
         rd_2 = (RadioButton) findViewById(R.id.rd_2);
         rd_3 = (RadioButton) findViewById(R.id.rd_3);
+        rd_4 = (RadioButton) findViewById(R.id.rd_4);
 
     }
 
@@ -71,16 +72,6 @@ public class CancelJobActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        Realm db = globals.getDB();
-        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
-        if (job.end_time == null) {
-            getMenuInflater().inflate(R.menu.view_job_detail_menu, menu);
-        }//only show when job i still pending completion
-        return true;
-    }
 
 
     //why you cancelled
@@ -89,6 +80,7 @@ public class CancelJobActivity extends AppCompatActivity {
         if (rd_1.isChecked()) reason = "took_too_long_to_arrive";
         if (rd_2.isChecked()) reason = "bad_service";
         if (rd_3.isChecked()) reason = "too_expensive";
+        if (rd_4.isChecked()) reason = "wrong order";
 
         ProgressDialog pd = new ProgressDialog(CancelJobActivity.this);
         pd.setMessage(getString(R.string.please_wait));

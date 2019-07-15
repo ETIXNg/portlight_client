@@ -50,7 +50,7 @@
                     app:rb_color="#FFCDD2"
                     app:rb_radius="32dp"
                     app:rb_rippleAmount="4"
-                    app:rb_duration="2000"
+                    app:rb_duration="2500"
                     app:rb_scale="6">
 
 
