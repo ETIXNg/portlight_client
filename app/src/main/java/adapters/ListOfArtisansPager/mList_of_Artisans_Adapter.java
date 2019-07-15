@@ -103,7 +103,7 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
             holder.txt_artisan_name.setText(artisan.name);
             holder.txt_num_jobs.setText(artisan.num_of_jobs + " " + activity_context.getResources().getString(R.string.jobs));
             holder.txt_skills.setText(artisan.skills);
-            holder.txt_hourly_rate.setText( globals.formatCurrency( artisan.hourly_rate ));
+            holder.txt_hourly_rate.setText( globals.formatCurrency( artisan.hourly_rate ) + activity_context.getString(R.string.per_hr));
             holder.txt_mobile.setText( artisan.mobile );
 
             if(position%2==0)

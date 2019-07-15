@@ -31,11 +31,12 @@ public class mJobs extends RealmObject {
     public String geoLocationLatitude;//coordinates of this job
     public String geoLocationLongitude;
     public double price;
-    public String description;//any notes the artian may want to note
+    public String description;//any notes the artisan may want to note
     public RealmList<mTask> tasks;
     public mJobs(){
         start_time = LocalDateTime.now().toString();
     }
+    public String job_status = JobStatus.opened.toString();
     public double getTheTotalPrice() {
         double total = 0;
         for (mTask t : this.tasks) {

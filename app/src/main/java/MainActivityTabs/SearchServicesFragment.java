@@ -34,6 +34,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,6 +90,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -129,7 +131,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     MapView mMapView;
     private static GoogleMap googleMap;
-    static List<String>map_artisans;
+    static HashMap<String,Marker> map_artisans;//the markers for the map
 
     public static List<mArtisan> found_artisans;//the list of all the artisans found in this search
     public static List<Integer> found_artisans_rating;//the list of the ratings of the artisans
@@ -192,7 +194,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         relLay2 = (RelativeLayout) view.findViewById(R.id.relLay2);
         relLay2.setVisibility(View.GONE);
         topView.invalidate();//refresh
-        map_artisans = new ArrayList<>();
+        map_artisans = new HashMap<>();
 
         activity_context = getActivity();
 
@@ -480,6 +482,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                     if (knownName.equals(null))
                         knownName = "";//this to ensure that we dont pull null values in the address
                     my_address = country + ", " + city + ", " + state + ", " + knownName;
+                    if(my_address.equals("") || my_address.equals(" ") || TextUtils.isEmpty(my_address))
+                        my_address=getString(R.string.unknown_location);
 
                 } catch (Exception ex) {
                     Log.e(tag, "line 456 " + ex.getMessage());
@@ -554,14 +558,21 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     //set or update the artisan pointer on the screen
     public static void update_artisan_on_map(String artisan_app_id, String artisan_lat, String artisan_lng,String skill) {
 
-        //dont add this if the artisan is already there
-        if(map_artisans.contains(artisan_app_id))return;
-        map_artisans.add(artisan_app_id);
 
-        try {
-            double latitude = Double.parseDouble(artisan_lat);
-            double longitude = Double.parseDouble(artisan_lng);
+        double latitude = Double.parseDouble(artisan_lat);
+        double longitude = Double.parseDouble(artisan_lng);
 
+
+
+        //update marker position if already present
+        if(map_artisans.containsKey(artisan_app_id))
+        {
+            Marker marker = map_artisans.get(artisan_app_id);
+            marker.setPosition(new LatLng(latitude,longitude));
+        }
+        //else add it
+        else
+        {
 
             Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(latitude, longitude))
@@ -569,10 +580,14 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                     //.snippet(skill)
                     .rotation((float) 3.5)
                     .icon(bitmapDescriptorFromVector(activity_context, R.drawable.ic_map_worker_icon)));
-        }catch (Exception ex)
-        {
-            //
+
+
+            map_artisans.put(artisan_app_id, marker);
+
         }
+
+
+
     }
 
     private static BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 
 import android.os.Handler;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -46,6 +48,8 @@ public class ListOfArtisansFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    SlidingPaneLayout sliding_panel;
+
     Spinner spinner_city;
     Spinner spinner_skill;
     RecyclerView recyclerView;
@@ -56,6 +60,8 @@ public class ListOfArtisansFragment extends Fragment {
 
     static Activity activity_context;
     RelativeLayout lin_bottom;
+    Button btn_refresh_artisans;
+    ImageView img_close_pane;
 
 
     private static final String tag = "ListOfArtisansFragment";
@@ -87,6 +93,19 @@ public class ListOfArtisansFragment extends Fragment {
         lin_bottom  = (RelativeLayout)v.findViewById(R.id.lin_bottom);
         lin_bottom .setVisibility(View.GONE);
 
+
+
+        //
+        sliding_panel=(SlidingPaneLayout)v.findViewById(R.id.sliding_panel);
+        img_close_pane = (ImageView)v.findViewById(R.id.img_close_pane);
+        img_close_pane.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //close the panel
+                sliding_panel.closePane();
+            }
+        });
+
         //
         progress_bar = (ProgressBar) v.findViewById(R.id.progress_bar);
         progress_bar.setVisibility(View.GONE);
@@ -97,10 +116,9 @@ public class ListOfArtisansFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                //reset the page to 1 and clear the current list
-                page = 1;
-                artisans_list_data.clear();
-                get_more_data();
+                //open the pane
+                sliding_panel.openPane();
+
             }
         });
 
@@ -109,6 +127,19 @@ public class ListOfArtisansFragment extends Fragment {
         recyclerView.setLayoutManager(lm);
         recyclerView.setHasFixedSize(true);
 
+
+        //
+        btn_refresh_artisans = (Button)v.findViewById(R.id.btn_refresh_artisans);
+        btn_refresh_artisans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //reset the page to 1 and clear the current list
+                page = 1;
+                artisans_list_data.clear();
+                sliding_panel.closePane();
+                get_more_data();
+            }
+        });
 
         //
         get_more_data();

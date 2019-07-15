@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.samaritan.portchlyt_services.ArtisanRatingActivity;
 import com.samaritan.portchlyt_services.NoArtisansFoundActivity;
+import com.samaritan.portchlyt_services.NotificationActivity;
 import com.samaritan.portchlyt_services.R;
 import com.samaritan.portchlyt_services.ViewJobActivity;
 import com.samaritan.portchlyt_services.app;
@@ -35,6 +36,7 @@ import io.realm.RealmList;
 import models.appSettings;
 import models.mArtisan.mArtisan;
 import models.mClient;
+import models.mJobs.JobStatus;
 import models.mJobs.mJobs;
 import models.mJobs.mTask;
 
@@ -93,6 +95,31 @@ public class MyMqtt {
                 //route the message to the correct handler
 
 
+                if (type.equals("job_cancelled")) {
+
+                    Realm db = globals.getDB();
+                    mJobs job = db.where(mJobs.class).equalTo("_job_id",json.getString("_job_id")).findFirst();
+                    db.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            job.end_time=LocalDateTime.now().toString();
+                            job.job_status= JobStatus.cancelled.toString();
+                        }
+                    });
+                    db.close();
+
+                    //display a notification for cancelling the job
+                    Intent notification =  new Intent(app.ctx, NotificationActivity.class);
+                    notification.putExtra("message",json.getString("reason_for_cancellation"));
+                    notification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    app.ctx.startActivity(notification);
+
+
+
+
+
+                }
+
                 //apdate the artisan icon on the map
                 if(type.equals("artisan_on_map_update"))
                 {
@@ -113,8 +140,10 @@ public class MyMqtt {
                         db2.executeTransaction(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                if (job.end_time == null) {//make sure we dont change the date again
+                                if (job.end_time == null)
+                                {//make sure we dont change the date again even if new payment if recieved
                                     job.end_time = LocalDateTime.now().toString();//set the end time
+                                    job.job_status= JobStatus.closed.toString();
                                     JobsFragment.refreshJobsAdapter();
                                     Intent rating = new Intent(app.ctx, ArtisanRatingActivity.class);
                                     rating.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -225,7 +254,7 @@ public class MyMqtt {
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-                Log.e(tag, "message delivered");
+                //Log.e(tag, "message delivered");
             }
         });
         connect();//attempt to connect as soon as its created
@@ -303,4 +332,9 @@ public class MyMqtt {
             ex.printStackTrace();
         }
     }
+
+
+
+
+
 }

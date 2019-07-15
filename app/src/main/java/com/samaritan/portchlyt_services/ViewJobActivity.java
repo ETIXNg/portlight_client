@@ -32,6 +32,8 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import adapters.mTasksAdapter;
 import io.realm.Realm;
+import models.mClient;
+import models.mJobs.JobStatus;
 import models.mJobs.mJobs;
 import globals.*;
 
@@ -62,7 +64,7 @@ public class ViewJobActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_job);
-        content_view = (LinearLayout)findViewById(R.id.content_view);
+        content_view = (LinearLayout) findViewById(R.id.content_view);
         _job_id = getIntent().getStringExtra("_job_id");
 
 
@@ -71,7 +73,6 @@ public class ViewJobActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         getSupportActionBar().setTitle(getString(R.string.job_details));
-
 
 
         //
@@ -88,12 +89,9 @@ public class ViewJobActivity extends AppCompatActivity {
         tbl_lay = (LinearLayout) findViewById(R.id.tbl_lay);
 
         //buttons
-        btn_open_dispute = (BootstrapButton)findViewById(R.id.btn_open_dispute);
-        btn_cash_payment = (BootstrapButton)findViewById(R.id.btn_cash_payment);
-        btn_card_payment = (BootstrapButton)findViewById(R.id.btn_card_payment);
-
-
-
+        btn_open_dispute = (BootstrapButton) findViewById(R.id.btn_open_dispute);
+        btn_cash_payment = (BootstrapButton) findViewById(R.id.btn_cash_payment);
+        btn_card_payment = (BootstrapButton) findViewById(R.id.btn_card_payment);
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -103,12 +101,19 @@ public class ViewJobActivity extends AppCompatActivity {
         getTheJob();
 
         //show that this job is currently closed
-        Realm db=globals.getDB();
-        mJobs job=db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
-        if(job.end_time!=null) {
+        Realm db = globals.getDB();
+        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
+        if (job.end_time != null) {
             Snackbar.make(content_view, getString(R.string.this_job_is_closed), Snackbar.LENGTH_INDEFINITE).show();
             btn_card_payment.setVisibility(View.GONE);//hide these two
             btn_cash_payment.setVisibility(View.GONE);
+        }
+
+        if(job.job_status== JobStatus.closed.toString()) {
+            Snackbar.make(content_view, getString(R.string.this_job_is_closed), Snackbar.LENGTH_INDEFINITE).show();
+        }
+        if(job.job_status== JobStatus.cancelled.toString()) {
+            Snackbar.make(content_view, getString(R.string.this_job_was_cancelled), Snackbar.LENGTH_INDEFINITE).show();
         }
         String artisan_app_id = job.artisan_app_id;
         db.close();
@@ -116,7 +121,7 @@ public class ViewJobActivity extends AppCompatActivity {
 
         //load image into view
         //load artisan image
-        ImageView img_profile = (ImageView)findViewById(R.id.img_profile);
+        ImageView img_profile = (ImageView) findViewById(R.id.img_profile);
         Glide.with(this)
                 .load(globals.base_url + "/fetch_artisan_profile_picture?artisan_app_id=" + artisan_app_id)
                 .centerCrop()
@@ -126,8 +131,8 @@ public class ViewJobActivity extends AppCompatActivity {
         img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent vp = new Intent(ViewJobActivity.this,ViewArtisanProfilePictureActivity.class);
-                vp.putExtra("artisan_app_id",artisan_app_id);
+                Intent vp = new Intent(ViewJobActivity.this, ViewArtisanProfilePictureActivity.class);
+                vp.putExtra("artisan_app_id", artisan_app_id);
                 startActivity(vp);
             }
         });
@@ -136,12 +141,10 @@ public class ViewJobActivity extends AppCompatActivity {
     }//oncreate
 
 
-
-
     //get the job from the database and display it
     public static void getTheJob() {
-        Realm db=globals.getDB();
-        mJobs job=db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
+        Realm db = globals.getDB();
+        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
         try {
 
             DateTimeFormatter dtf = ISODateTimeFormat.localDateOptionalTimeParser();
@@ -162,26 +165,20 @@ public class ViewJobActivity extends AppCompatActivity {
             list_tasks.setAdapter(tasks_adapter);
 
 
-        }catch (Exception ex)
-        {
-            Log.e(tag,ex.getLocalizedMessage());
-        }
-        finally {
+        } catch (Exception ex) {
+            Log.e(tag, ex.getLocalizedMessage());
+        } finally {
             db.close();
         }
     }
 
-    public static void setTotalPrice()
-    {
-        Realm db=globals.getDB();
-        mJobs job=db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
-        lbl_total_price.setText(app.ctx.getString(R.string.total_price)+": "+ globals.formatCurrency( job.getTheTotalPrice() )  );
-        if(job.getTheTotalPrice()>0)
-        {
+    public static void setTotalPrice() {
+        Realm db = globals.getDB();
+        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
+        lbl_total_price.setText(app.ctx.getString(R.string.total_price) + ": " + globals.formatCurrency(job.getTheTotalPrice()));
+        if (job.getTheTotalPrice() > 0) {
             tbl_lay.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             tbl_lay.setVisibility(View.INVISIBLE);
         }
         db.close();
@@ -189,18 +186,15 @@ public class ViewJobActivity extends AppCompatActivity {
 
     //set the total time of this job if running or complete
     public static void set_the_total_time() {
-        Realm db=globals.getDB();
-        mJobs job=db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
+        Realm db = globals.getDB();
+        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
         DateTimeFormatter dtf = ISODateTimeFormat.localDateOptionalTimeParser();
         LocalDateTime start_time = dtf.parseLocalDateTime(job.start_time);
         LocalDateTime end_time;
 
-        if(job.end_time!=null)
-        {
-            end_time   = dtf.parseLocalDateTime(job.end_time);
-        }
-        else
-        {
+        if (job.end_time != null) {
+            end_time = dtf.parseLocalDateTime(job.end_time);
+        } else {
             end_time = LocalDateTime.now();
         }
 
@@ -209,9 +203,9 @@ public class ViewJobActivity extends AppCompatActivity {
         int hours = p.getHours();
         int mins = p.getMinutes();
         txt_total_time.setText(
-                app.ctx.getString(R.string.total_time)+"\n"+ days + " " +   app.ctx.getString(R.string.days)
-                        +" " + hours+" "+ app.ctx.getString(R.string.hrs)
-                        +" " + mins +" " + app.ctx.getString(R.string.mins)
+                app.ctx.getString(R.string.total_time) + "\n" + days + " " + app.ctx.getString(R.string.days)
+                        + " " + hours + " " + app.ctx.getString(R.string.hrs)
+                        + " " + mins + " " + app.ctx.getString(R.string.mins)
         );
         db.close();
     }
@@ -238,6 +232,18 @@ public class ViewJobActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
+
+            case R.id.m_cancel:
+                Intent cancel = new Intent(ViewJobActivity.this, CancelJobActivity.class);
+                Realm db = globals.getDB();
+                mClient client = db.where(mClient.class).findFirst();
+                mJobs job  = db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
+                cancel.putExtra("_job_id", _job_id);
+                cancel.putExtra("artisan_app_id",job.artisan_app_id );
+                cancel.putExtra("client_app_id", client.app_id);
+                db.close();
+                startActivity(cancel);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -245,7 +251,7 @@ public class ViewJobActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.view_job_menu, menu);
+        getMenuInflater().inflate(R.menu.view_job_detail_menu, menu);
         return true;
     }
 
@@ -257,24 +263,21 @@ public class ViewJobActivity extends AppCompatActivity {
 
 
     //
-    public void openCashPaymentActivity(View v)
-    {
-        if(!check_this_job_has_bills())
-        {
-            Snackbar.make(content_view,getString(R.string.this_job_has_no_bills_yet),Snackbar.LENGTH_SHORT).show();
+    public void openCashPaymentActivity(View v) {
+        if (!check_this_job_has_bills()) {
+            Snackbar.make(content_view, getString(R.string.this_job_has_no_bills_yet), Snackbar.LENGTH_SHORT).show();
             return;
         }
-        Intent cp = new Intent(ViewJobActivity.this,CashPaymentActivity.class);
-        cp.putExtra("_job_id",_job_id);
+        Intent cp = new Intent(ViewJobActivity.this, CashPaymentActivity.class);
+        cp.putExtra("_job_id", _job_id);
         startActivity(cp);
     }
 
 
-    private boolean check_this_job_has_bills()
-    {
-        Realm db=globals.getDB();
-        mJobs job=db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
-        if(job.tasks.size()==0) {
+    private boolean check_this_job_has_bills() {
+        Realm db = globals.getDB();
+        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
+        if (job.tasks.size() == 0) {
             db.close();
             return false;
         }
@@ -284,13 +287,12 @@ public class ViewJobActivity extends AppCompatActivity {
 
 
     //open the dispute activity
-    public void open_dispute_activity(View v)
-    {
-        Realm db =globals.getDB();
-        mJobs job= db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
-        Intent dis = new Intent(ViewJobActivity.this,DisputeActivity.class);
-        dis.putExtra("_job_id",_job_id);
-        dis.putExtra("artisan_app_id",job.artisan_app_id);
+    public void open_dispute_activity(View v) {
+        Realm db = globals.getDB();
+        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
+        Intent dis = new Intent(ViewJobActivity.this, DisputeActivity.class);
+        dis.putExtra("_job_id", _job_id);
+        dis.putExtra("artisan_app_id", job.artisan_app_id);
         db.close();
         startActivity(dis);
         finish();
@@ -299,18 +301,15 @@ public class ViewJobActivity extends AppCompatActivity {
 
 
     //open make the card payment
-    public void open_make_card_payment(View v)
-    {
-        if(!check_this_job_has_bills())
-        {
-            Snackbar.make(content_view,getString(R.string.this_job_has_no_bills_yet),Snackbar.LENGTH_SHORT).show();
+    public void open_make_card_payment(View v) {
+        if (!check_this_job_has_bills()) {
+            Snackbar.make(content_view, getString(R.string.this_job_has_no_bills_yet), Snackbar.LENGTH_SHORT).show();
             return;
         }
-        Intent cp = new Intent(ViewJobActivity.this,CardPaymentActivity.class);
-        cp.putExtra("_job_id",_job_id);
+        Intent cp = new Intent(ViewJobActivity.this, CardPaymentActivity.class);
+        cp.putExtra("_job_id", _job_id);
         startActivity(cp);
     }
-
 
 
 }//clas

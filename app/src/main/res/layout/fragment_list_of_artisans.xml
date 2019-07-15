@@ -1,121 +1,162 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.slidingpanelayout.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_view"
+    android:id="@+id/sliding_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp"
+    android:layoutDirection="rtl"
     tools:context="MainActivityTabs.ListOfArtisansFragment">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="12">
+        android:orientation="vertical">
+
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:background="@drawable/light_gray_border"
+            android:layoutDirection="ltr"
             android:orientation="vertical"
             android:padding="5dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+
+                <ImageView
+                    android:id="@+id/img_close_pane"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cancel_black_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/close"
+                    android:textColor="#000"
+                    android:textSize="9dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_marginLeft="9dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_city"
+                android:textColor="#000"
+                android:textSize="9dp"
+                android:textStyle="bold" />
 
             <Spinner
+                android:background="@drawable/et_background"
                 android:id="@+id/spinner_city"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:entries="@array/cities"
-                android:gravity="left"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:spinnerMode="dialog"
-                android:theme="@style/ThemeOverlay.AppCompat.Light"
-                android:transformPivotX="0dp"
-                android:transformPivotY="0dp" />
-        </LinearLayout>
+                android:spinnerMode="dialog" />
 
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:orientation="vertical"
-            android:padding="5dp">
+            <TextView
+                android:layout_marginLeft="9dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_a_job"
+                android:textColor="#000"
+                android:textSize="9dp"
+                android:textStyle="bold" />
 
             <Spinner
+                android:background="@drawable/et_background"
                 android:id="@+id/spinner_skill"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:entries="@array/job_categories"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:spinnerMode="dialog"
-                android:theme="@style/ThemeOverlay.AppCompat.Light"
-                android:transformPivotX="0dp"
-                android:transformPivotY="0dp" />
+                android:spinnerMode="dialog" />
+
+            <Button
+                android:id="@+id/btn_refresh_artisans"
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:text="@string/search" />
+
         </LinearLayout>
 
 
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
         <RelativeLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:padding="5dp">
 
             <ImageView
                 android:id="@+id/img_search"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerInParent="true"
                 android:src="@drawable/ic_search_black_24dp" />
+
         </RelativeLayout>
 
 
+        <!--recycler view and progress bar-->
+        <RelativeLayout
+            android:layoutDirection="ltr"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="2dp" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:layout_centerInParent="true" />
+
+
+        </RelativeLayout>
+        <!--.//recycler view and progress bar-->
+
+        <!--bottom view for the infomation-->
+        <RelativeLayout
+            android:id="@+id/lin_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_weight="0"
+            android:alpha="0.4"
+            android:background="@color/light_grey_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/long_press_for_more_options" />
+
+        </RelativeLayout>
+        <!--.//bottom view for the infomation-->
+
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.3dp"
-        android:alpha="0.3"
-        android:background="#000" />
-
-
-    <RelativeLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="2dp" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="57dp"
-            android:layout_height="57dp"
-            android:layout_centerInParent="true" />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:alpha="0.4"
-        android:id="@+id/lin_bottom"
-        android:background="@color/light_grey_bg"
-        android:orientation="vertical"
-        android:layout_weight="0"
-        android:layout_width="match_parent"
-        android:layout_height="57dp">
-
-        <TextView
-            android:layout_centerInParent="true"
-            android:text="@string/long_press_for_more_options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</androidx.slidingpanelayout.widget.SlidingPaneLayout>

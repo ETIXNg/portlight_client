@@ -14,7 +14,7 @@
     <string name="search_artisan">Search Artisan {fa_search}</string>
     <string name="address">Address</string>
     <string name="cannot_be_blank">Cannot be blank</string>
-    <string name="select_a_job">Select a job</string>
+    <string name="select_a_job">select a job</string>
     <string name="add_location">Add Location</string>
     <string name="click_to_edit_location">click to edit location</string>
     <string name="ok">ok</string>
@@ -35,7 +35,7 @@
     <string name="invalid_otp">Invalid otp</string>
     <string name="register">Register</string>
     <string name="we_need_to_verify_your_mobile_number">We need to verify your mobile number</string>
-    <string name="no_artisans_were_found_for_the_following_services">No artisans were found for the following services</string>
+    <string name="no_artisans_were_found_for_the_following_services">No artisans were found for the following services:</string>
     <string name="notify_me_when_artisan_is_available">Notify me when artisan is available</string>
     <string name="ignore">Ignore</string>
     <string name="submit">Submit</string>
@@ -100,5 +100,15 @@
     <string name="call">Call</string>
     <string name="sms">SMS</string>
     <string name="long_press_for_more_options">long press for more options</string>
+    <string name="close">close</string>
+    <string name="unknown_location">Unknown location?</string>
+    <string name="per_hr">/hr</string>
+
+    <string name="why_do_you_want_to_cancel">why do you want to cancel</string>
+
+    <string name="took_too_long_to_arrive">took too long to arrive</string>
+    <string name="bad_service">bad service</string>
+    <string name="too_expensive">too expensive</string>
+    <string name="this_job_was_cancelled">this job was cancelled</string>
 
 </resources>
