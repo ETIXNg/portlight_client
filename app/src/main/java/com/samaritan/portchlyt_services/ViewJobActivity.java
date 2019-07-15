@@ -60,6 +60,10 @@ public class ViewJobActivity extends AppCompatActivity {
     //
     static String tag = "ViewJobActivity";
 
+
+    public static int request_code_for_cancel_job=2;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,7 +246,7 @@ public class ViewJobActivity extends AppCompatActivity {
                 cancel.putExtra("artisan_app_id",job.artisan_app_id );
                 cancel.putExtra("client_app_id", client.app_id);
                 db.close();
-                startActivity(cancel);
+                startActivityForResult(cancel,request_code_for_cancel_job);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -309,6 +313,16 @@ public class ViewJobActivity extends AppCompatActivity {
         Intent cp = new Intent(ViewJobActivity.this, CardPaymentActivity.class);
         cp.putExtra("_job_id", _job_id);
         startActivity(cp);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == request_code_for_cancel_job) {
+            if (resultCode == RESULT_OK) {
+                finish();//finish this activity too
+            }
+        }
     }
 
 

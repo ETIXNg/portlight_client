@@ -104,7 +104,7 @@
     <string name="unknown_location">Unknown location?</string>
     <string name="per_hr">/hr</string>
 
-    <string name="why_do_you_want_to_cancel">why do you want to cancel</string>
+    <string name="why_do_you_want_to_cancel">why do you want to cancel?</string>
 
     <string name="took_too_long_to_arrive">took too long to arrive</string>
     <string name="bad_service">bad service</string>
@@ -112,5 +112,6 @@
     <string name="this_job_was_cancelled">this job was cancelled</string>
     <string name="wrong_order">wrong order</string>
     <string name="cancel_job">Cancel job</string>
+    <string name="job_cancelled">Job cancelled</string>
 
 </resources>
