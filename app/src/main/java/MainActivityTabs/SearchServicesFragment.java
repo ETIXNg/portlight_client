@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 
 import android.os.Looper;
 import android.text.TextUtils;
@@ -151,6 +152,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     public static boolean useNewLocation;//set to true if the user chooses to use a different location
     public static boolean LocationEnabled;//is the location enabled yes/no
 
+    static SlidingPaneLayout sliding_layout;
+
     static String tag = "SearchServicesFragment";
 
 
@@ -186,6 +189,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         //
         view = inflater.inflate(R.layout.fragment_search_services, container, false);
         topView = (ConstraintLayout) view.findViewById(R.id.topView);
+        sliding_layout = (SlidingPaneLayout) view.findViewById(R.id.sliding_layout);
 
         //
         rel_results = (LinearLayout) view.findViewById(R.id.rel_results);
@@ -353,6 +357,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
                 //
                 rippleBackground.startRippleAnimation();
+                sliding_layout.closePane();
 
                 //also play the sound to show the search is on going
                 mp = MediaPlayer.create(ctx, R.raw.unsure);
