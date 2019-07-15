@@ -22,9 +22,11 @@ import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
+import MainActivityTabs.JobsFragment;
 import globals.globals;
 import io.realm.Realm;
 import models.mArtisan.mArtisan;
+import models.mJobs.JobStatus;
 import models.mJobs.mJobs;
 
 public class CancelJobActivity extends AppCompatActivity {
@@ -35,12 +37,10 @@ public class CancelJobActivity extends AppCompatActivity {
     String _job_id;
     String client_app_id;
     String artisan_app_id;
-    RadioButton rd_1, rd_2, rd_3, rd_4,rd_5;
+    RadioButton rd_1, rd_2, rd_3, rd_4, rd_5;
     View contextView;
     LinearLayout lay_other;
     EditText txt_other;
-
-
 
 
     @Override
@@ -49,6 +49,7 @@ public class CancelJobActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cancel_job);
         contextView = (LinearLayout) findViewById(R.id.contextView);
         lay_other = (LinearLayout) findViewById(R.id.lay_other);
+        lay_other.setVisibility(View.GONE);
 
 
         _job_id = getIntent().getStringExtra("_job_id");
@@ -67,7 +68,7 @@ public class CancelJobActivity extends AppCompatActivity {
         rd_4 = (RadioButton) findViewById(R.id.rd_4);
         rd_5 = (RadioButton) findViewById(R.id.rd_5);
 
-        txt_other=(EditText)findViewById(R.id.txt_other);
+        txt_other = (EditText) findViewById(R.id.txt_other);
 
         rd_1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,14 +122,10 @@ public class CancelJobActivity extends AppCompatActivity {
     }
 
 
-
-    private void get_set_lay_other()
-    {
-        if(rd_5.isChecked())
-        {
+    private void get_set_lay_other() {
+        if (rd_5.isChecked()) {
             lay_other.setVisibility(View.VISIBLE);
-        }else
-        {
+        } else {
             lay_other.setVisibility(View.GONE);
         }
     }
@@ -145,8 +142,7 @@ public class CancelJobActivity extends AppCompatActivity {
 
 
         //dont send empty reaon, this applies only to the txt_other
-        if(TextUtils.isEmpty(reason))
-        {
+        if (TextUtils.isEmpty(reason)) {
             txt_other.setError(getString(R.string.cannot_be_blank));
             return;
         }
@@ -170,28 +166,35 @@ public class CancelJobActivity extends AppCompatActivity {
                             Snackbar.make(contextView, R.string.error_occured, Snackbar.LENGTH_SHORT).show();
                             Log.e(tag, e + " line 269");
                         } else {
+
                             try {
                                 JSONObject json = new JSONObject(result);
                                 String res = json.getString("res");
                                 if (res.equals("ok")) {
-                                    Toast.makeText(CancelJobActivity.this,getString(R.string.job_cancelled),Toast.LENGTH_SHORT).show();
-                                    finishActivity(ViewJobActivity.request_code_for_cancel_job);
+                                    Realm db = globals.getDB();
+                                    mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
+                                    db.executeTransaction(new Realm.Transaction() {
+                                        @Override
+                                        public void execute(Realm realm) {
+                                            job.job_status = JobStatus.cancelled.toString();
+                                            JobsFragment.refreshJobsAdapter();
+                                        }
+                                    });
+                                    db.close();
+                                    Toast.makeText(CancelJobActivity.this, getString(R.string.job_cancelled), Toast.LENGTH_SHORT).show();
+                                    finishActivityFromChild(CancelJobActivity.this, ViewJobActivity.request_code_for_cancel_job);
+                                    finish();
                                 } else {
                                     Snackbar.make(contextView, R.string.error_occured, Snackbar.LENGTH_SHORT).show();
                                 }
                             } catch (Exception ex) {
                                 Log.e(tag, ex.getMessage());
                             }
+
                         }
                     }
                 });
     }
-
-
-
-
-
-
 
 
 }

@@ -107,18 +107,21 @@ public class ViewJobActivity extends AppCompatActivity {
         //show that this job is currently closed
         Realm db = globals.getDB();
         mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
-        if (job.end_time != null) {
+
+
+        if (job.job_status.equals(JobStatus.closed.toString())) {
             Snackbar.make(content_view, getString(R.string.this_job_is_closed), Snackbar.LENGTH_INDEFINITE).show();
             btn_card_payment.setVisibility(View.GONE);//hide these two
             btn_cash_payment.setVisibility(View.GONE);
         }
 
-        if(job.job_status== JobStatus.closed.toString()) {
-            Snackbar.make(content_view, getString(R.string.this_job_is_closed), Snackbar.LENGTH_INDEFINITE).show();
-        }
-        if(job.job_status== JobStatus.cancelled.toString()) {
+        if (job.job_status.equals(JobStatus.cancelled.toString())) {
             Snackbar.make(content_view, getString(R.string.this_job_was_cancelled), Snackbar.LENGTH_INDEFINITE).show();
+            btn_card_payment.setVisibility(View.GONE);//hide these two
+            btn_cash_payment.setVisibility(View.GONE);
+            btn_open_dispute.setVisibility(View.GONE);
         }
+
         String artisan_app_id = job.artisan_app_id;
         db.close();
 
@@ -255,7 +258,16 @@ public class ViewJobActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        Realm db = globals.getDB();
+        mJobs job = db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
+        if( job.job_status.equals(JobStatus.closed.toString()) || job.job_status.equals(JobStatus.cancelled.toString())) {
+        }
+        else
+        {
+            getMenuInflater().inflate(R.menu.view_job_detail_menu, menu);
+        }
         getMenuInflater().inflate(R.menu.view_job_detail_menu, menu);
+
         return true;
     }
 
@@ -319,6 +331,7 @@ public class ViewJobActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         if (requestCode == request_code_for_cancel_job) {
+            finish();
             if (resultCode == RESULT_OK) {
                 finish();//finish this activity too
             }

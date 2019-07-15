@@ -4,6 +4,7 @@ import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmRecyclerViewAdapter;
+import models.mJobs.JobStatus;
 import models.mJobs.mJobs;
 
 import android.app.Activity;
@@ -107,9 +108,13 @@ public class mjobsAdapter extends RecyclerView.Adapter<mjobsAdapter.myViewHolder
         });
 
         //indicate that this job is completed
-        if(job.end_time!=null)
+        if(job.job_status.equals(JobStatus.closed))
         {
             vh.img_status.setImageResource((R.drawable.ic_verified_user_black_24dp));
+        }
+
+        if (job.job_status.equals(JobStatus.cancelled.toString())) {
+            vh.img_status.setImageResource((R.drawable.ic_cancel_black_24dp));
         }
     }
 
