@@ -266,8 +266,6 @@ public class ViewJobActivity extends AppCompatActivity {
         {
             getMenuInflater().inflate(R.menu.view_job_detail_menu, menu);
         }
-        getMenuInflater().inflate(R.menu.view_job_detail_menu, menu);
-
         return true;
     }
 
