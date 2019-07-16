@@ -61,8 +61,8 @@ public class ViewJobActivity extends AppCompatActivity {
     static String tag = "ViewJobActivity";
 
 
-    public static int request_code_for_cancel_job=2;
-
+    public static int request_code_for_cancel_job = 2;
+    static Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class ViewJobActivity extends AppCompatActivity {
         content_view = (LinearLayout) findViewById(R.id.content_view);
         _job_id = getIntent().getStringExtra("_job_id");
 
-
+        activity = this;
         mtoolbar = (Toolbar) findViewById(R.id.mtoolbar);
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -244,12 +244,12 @@ public class ViewJobActivity extends AppCompatActivity {
                 Intent cancel = new Intent(ViewJobActivity.this, CancelJobActivity.class);
                 Realm db = globals.getDB();
                 mClient client = db.where(mClient.class).findFirst();
-                mJobs job  = db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
+                mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
                 cancel.putExtra("_job_id", _job_id);
-                cancel.putExtra("artisan_app_id",job.artisan_app_id );
+                cancel.putExtra("artisan_app_id", job.artisan_app_id);
                 cancel.putExtra("client_app_id", client.app_id);
                 db.close();
-                startActivityForResult(cancel,request_code_for_cancel_job);
+                startActivityForResult(cancel, request_code_for_cancel_job);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -259,11 +259,9 @@ public class ViewJobActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         Realm db = globals.getDB();
-        mJobs job = db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
-        if( job.job_status.equals(JobStatus.closed.toString()) || job.job_status.equals(JobStatus.cancelled.toString())) {
-        }
-        else
-        {
+        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
+        if (job.job_status.equals(JobStatus.closed.toString()) || job.job_status.equals(JobStatus.cancelled.toString())) {
+        } else {
             getMenuInflater().inflate(R.menu.view_job_detail_menu, menu);
         }
         return true;
@@ -334,6 +332,11 @@ public class ViewJobActivity extends AppCompatActivity {
                 finish();//finish this activity too
             }
         }
+    }
+
+
+    public static void close_activity() {
+        activity.finish();
     }
 
 

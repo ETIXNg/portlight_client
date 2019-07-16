@@ -114,8 +114,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     public static RippleBackground rippleBackground;//the riple background animation
     public static ArrayList<String> jobsList;
     //
-    ListView lst_skills;
-    skillsAdapter adp;
+    static ListView lst_skills;
+    static skillsAdapter adp;
 
     //
     static RelativeLayout relLay1, relLay2;
@@ -426,6 +426,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         rippleBackground.stopRippleAnimation();//stop the animation
         //clear the jobs list
         jobsList.clear();
+        //clear all the jobs check list to get ready for the next search
+        clear_all_selected_jobs();
     }
 
     //this method is to display a popup with the artisans location and job
@@ -451,6 +453,14 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     }
 
+
+    private static void clear_all_selected_jobs()
+    {
+        String[] skills = activity_context.getResources().getStringArray(R.array.job_categories);
+        adp = new skillsAdapter(skills);
+        lst_skills.setAdapter(adp);
+        adp.notifyDataSetChanged();
+    }
 
     private void init_map() {
         // For dropping a marker at a point on the Map

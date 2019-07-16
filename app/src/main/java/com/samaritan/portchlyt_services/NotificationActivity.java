@@ -15,6 +15,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     Toolbar mtoolbar;
     String message;
+    String title;
 
     TextView txt_notification;
     @Override
@@ -25,13 +26,14 @@ public class NotificationActivity extends AppCompatActivity {
         txt_notification=(TextView)findViewById(R.id.txt_notification);
 
         message = getIntent().getStringExtra("message");
+        title = getIntent().getStringExtra("title");
         txt_notification.setText(message);
 
         mtoolbar = (Toolbar) findViewById(R.id.mtoolbar);
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
-        getSupportActionBar().setTitle(getString(R.string.job_details));
+        getSupportActionBar().setTitle(title);
 
 
     }

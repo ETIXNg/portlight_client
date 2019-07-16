@@ -121,11 +121,19 @@ public class MyMqtt extends Service {
                     SearchServicesFragment.remove_selected_artisan_icon(job.artisan_app_id);
                     db.close();
 
+                    //refresh the adapter
+                    JobsFragment.refreshJobsAdapter();
+
+                    //close the ViewJobActivity if running
+                    try{
+                        ViewJobActivity.close_activity();
+                    }catch (Exception ex){}
 
 
                     //display a notification for cancelling the job
                     Intent notification =  new Intent(app.ctx, NotificationActivity.class);
                     notification.putExtra("message",json.getString("reason_for_cancellation"));
+                    notification.putExtra("title",app.ctx.getString(R.string.job_cancelled));
                     notification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     app.ctx.startActivity(notification);
 
@@ -171,6 +179,12 @@ public class MyMqtt extends Service {
                         //remove icon and let the plain icon come up
                         SearchServicesFragment.remove_selected_artisan_icon(job.artisan_app_id);
                         db2.close();
+
+                        //close the ViewJobActivity if running
+                        try{
+                            ViewJobActivity.close_activity();
+                        }catch (Exception ex){}
+
                         create_notification(app.ctx.getString(R.string.payment_recieved));
                     } catch (Exception ex) {
                         Log.e(tag,ex.getMessage());
@@ -230,6 +244,11 @@ public class MyMqtt extends Service {
                             mArtisan artisan = new Gson().fromJson(json.getString("artisan_json_data"), mArtisan.class);
                             int artisan_rating = (int)json.getDouble("artisan_rating");
                             SearchServicesFragment.DisplayAnArtisanThumbNail(artisan,artisan_rating);//show this thumbnail with the correct jobs
+
+
+
+
+
 
                             //also save this job to the db since it has been accepted by the artisan
                             //now save this job in the jobs place and open its activity straight away
