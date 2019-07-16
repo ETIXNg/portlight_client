@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
@@ -58,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         db.commitTransaction();
         db.close();
 
-        if(MyMqtt.mqttClient==null) {//only if client is not already there then re-init
-            MyMqtt.init(this);
-        }
+        //start the mqtt service
+        Intent mqtt_service =  new Intent(this,globals.MyMqtt.class);
+        startService(mqtt_service);
 
 
     }

@@ -284,13 +284,12 @@ public class ListOfArtisansFragment extends Fragment {
                         switch (which) {
                             case 0:
 
-
                                 Intent call = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", artisan.mobile, null));
                                 activity_context.startActivity(call);
-
-
                                 break;
+
                             case 1:
+
                                 Intent sms = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("smsto", artisan.mobile, null));
                                 activity_context.startActivity(sms);
                                 break;

@@ -113,5 +113,6 @@
     <string name="wrong_order">wrong order</string>
     <string name="cancel_job">Cancel job</string>
     <string name="job_cancelled">Job cancelled</string>
+    <string name="channel_name">porchlyt</string>
 
 </resources>

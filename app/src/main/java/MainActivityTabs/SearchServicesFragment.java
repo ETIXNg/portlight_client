@@ -492,6 +492,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                         my_address=getString(R.string.unknown_location);
 
                 } catch (Exception ex) {
+                    my_address=getString(R.string.unknown_location);
                     Log.e(tag, "line 456 " + ex.getMessage());
                 }
 
