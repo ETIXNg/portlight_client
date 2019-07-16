@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -116,7 +117,11 @@ public class MyMqtt extends Service {
                             job.job_status= JobStatus.cancelled.toString();
                         }
                     });
+                    //remove icon and let the plain icon come up
+                    SearchServicesFragment.remove_selected_artisan_icon(job.artisan_app_id);
                     db.close();
+
+
 
                     //display a notification for cancelling the job
                     Intent notification =  new Intent(app.ctx, NotificationActivity.class);
@@ -163,6 +168,8 @@ public class MyMqtt extends Service {
                                 }
                             }
                         });
+                        //remove icon and let the plain icon come up
+                        SearchServicesFragment.remove_selected_artisan_icon(job.artisan_app_id);
                         db2.close();
                         create_notification(app.ctx.getString(R.string.payment_recieved));
                     } catch (Exception ex) {
@@ -385,6 +392,10 @@ public class MyMqtt extends Service {
 
             }
 
+
+            //play a sound for notification
+            MediaPlayer mp = MediaPlayer.create(app.ctx, R.raw.plucky);
+            mp.start();
 
             return notification_id[0];
         } catch (Exception ex) {

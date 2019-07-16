@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import MainActivityTabs.SearchServicesFragment;
 import io.realm.Realm;
 import models.mClient;
 import models.mJobs.mJobs;
@@ -95,6 +96,7 @@ public class CardPaymentActivity extends AppCompatActivity {
         pd.show();
         Realm db = globals.getDB();
         mJobs job = db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
+        String artisan_app_id = job.artisan_app_id;
         mClient client = db.where(mClient.class).findFirst();
         Ion.with(CardPaymentActivity.this)
                 .load(globals.base_url + "/make_payment_for_artisan")
@@ -114,6 +116,8 @@ public class CardPaymentActivity extends AppCompatActivity {
                             String msg = json.getString("msg");
                             if (res.equals("ok")) {
                                 Toast.makeText(CardPaymentActivity.this, getString(R.string.payment_recieved), Toast.LENGTH_SHORT).show();
+                                //remove icon and let the plain icon come up
+                                SearchServicesFragment.remove_selected_artisan_icon(artisan_app_id);
                                 finish();
                             } else {
                                 Toast.makeText(CardPaymentActivity.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();

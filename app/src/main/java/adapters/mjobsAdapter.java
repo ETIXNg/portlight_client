@@ -108,7 +108,7 @@ public class mjobsAdapter extends RecyclerView.Adapter<mjobsAdapter.myViewHolder
         });
 
         //indicate that this job is completed
-        if(job.job_status.equals(JobStatus.closed))
+        if(job.job_status.equals(JobStatus.closed.toString()))
         {
             vh.img_status.setImageResource((R.drawable.ic_verified_user_black_24dp));
         }

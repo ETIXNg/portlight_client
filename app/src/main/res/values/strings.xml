@@ -56,7 +56,7 @@
     <string name="make_cash_payment">Make CashPayment {fa_money}</string>
     <string name="make_card_payment">Make CardPayment {fa_credit_card}</string>
     <string name="payment_methods">payment methods</string>
-    <string name="bill_updated">Bill updated</string>
+    <string name="bill_updated">bill updated</string>
     <string name="cash_payment">Cash Payment</string>
     <string name="your_about_to_make_a_cash_payment_to">Your about to make a cash payment to </string>
     <string name="total_amount">Total amount</string>

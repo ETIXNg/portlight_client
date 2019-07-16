@@ -445,6 +445,10 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
         foundArtisansAdapter fa_adapter = new foundArtisansAdapter(ctx, found_artisans, found_artisans_rating);
         lst_artisans_results.setAdapter(fa_adapter);
+
+        update_artisan_on_map_change_icon_to_selected(artisan);//display the selected artisan
+
+
     }
 
 
@@ -560,6 +564,45 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             }
         }
     }//.onrequest results
+
+
+
+
+    //remove the selected icon to show a now regular icon, when job is completed,cancelled, or closed
+    public static void remove_selected_artisan_icon(String artisan_app_id)
+    {
+        Marker marker = map_artisans.get(artisan_app_id);//get the specific marker
+        marker.remove();//remove from map
+        map_artisans.remove(artisan_app_id);//remove from list
+
+    }
+
+    //this will change the icon color to show the selected guy
+    public static void update_artisan_on_map_change_icon_to_selected(mArtisan artisan) {
+
+
+        //replace marker
+        if(map_artisans.containsKey(artisan.app_id))
+        {
+            Marker marker = map_artisans.get(artisan.app_id);//get the specific marker
+            marker.remove();//remove from map
+            map_artisans.remove(artisan.app_id);//remove from list
+
+            //add a new marker with the new icon
+            marker = googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(marker.getPosition().latitude, marker.getPosition().longitude))
+                    .title(TextUtils.join(" ",artisan.skills))
+                    //.snippet(skill)
+                    .rotation((float) 3.5)
+                    .icon(bitmapDescriptorFromVector(activity_context, R.drawable.ic_map_worker_icon_selected)));
+
+
+            map_artisans.put(artisan.app_id, marker);//add back to list
+
+        }
+
+
+    }
 
 
     //set or update the artisan pointer on the screen
