@@ -487,8 +487,9 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             public void run() {
                 Geocoder geocoder;
                 List<Address> addresses;
-                geocoder = new Geocoder(getActivity(), Locale.getDefault());
                 try {
+                    my_address=getString(R.string.unknown_location);
+                    geocoder = new Geocoder(getActivity(), Locale.getDefault());
                     addresses = geocoder.getFromLocation(wayLatitude, wayLongitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                     String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                     String city = addresses.get(0).getLocality();
@@ -506,17 +507,26 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                         my_address=getString(R.string.unknown_location);
 
                 } catch (Exception ex) {
-                    my_address=getString(R.string.unknown_location);
+
                     Log.e(tag, "line 456 " + ex.getMessage());
                 }
 
-                //this will now run on the ui thread
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_location.setText(my_address);//set the address
-                    }
-                });
+                try {
+                    //this will now run on the ui thread
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                txt_location.setText(my_address);//set the address
+                            } catch (Exception ex) {
+                                Log.e(tag, "line 521 " + ex.getMessage());
+                            }
+                        }
+                    });
+                }catch (Exception ex){
+
+                }
 
 
             }
