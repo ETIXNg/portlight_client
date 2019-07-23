@@ -58,7 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         getSupportActionBar().setTitle(getString(R.string.registration));
-        mtoolbar.setTitle(getResources().getString(R.string.registration));
 
 
         skills = new ArrayList<String>();

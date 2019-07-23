@@ -449,7 +449,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         lst_artisans_results.setAdapter(fa_adapter);
 
         update_artisan_on_map_change_icon_to_selected(artisan);//display the selected artisan
-
+        rippleBackground.stopRippleAnimation();//stop at the first artisan found
 
     }
 

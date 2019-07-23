@@ -89,7 +89,7 @@ public class ConfirmOTPActivity extends AppCompatActivity {
                                                     db.commitTransaction();//save the new status
                                                     Intent main = new Intent(ConfirmOTPActivity.this, MainActivity.class);
                                                     main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                    main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                                   // main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                                     main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     startActivity(main);

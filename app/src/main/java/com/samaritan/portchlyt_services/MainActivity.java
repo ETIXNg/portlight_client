@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    Realm db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +43,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setTabIcons();
 
-        //seed
-        db = Realm.getDefaultInstance();
-        db.beginTransaction();
-        for (int i = 0; i < 2; i++) {
-            mJobs j = new mJobs();
-            j._id = "" + i;
-            j.description = "This is job " + i;
-            try {
-                //db.insert(j);
-            } catch (Exception ex) {
-                Log.e("hassan", ex.getLocalizedMessage());
-            }
-        }
-        db.commitTransaction();
-        db.close();
 
         //start the mqtt service
         Intent mqtt_service =  new Intent(this,globals.MyMqtt.class);

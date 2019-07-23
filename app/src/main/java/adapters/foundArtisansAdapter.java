@@ -52,7 +52,6 @@ public class foundArtisansAdapter extends RecyclerView.Adapter<foundArtisansAdap
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         mArtisan artisan = artisans.get(position);
         int artisan_rating = artisans_rating.get(position);
-        //todo get the artisan image via glide library
         holder.lbl_artisan_skills.setText(TextUtils.join(" ",artisan.skills));
         holder.txt_artisan_name.setText(artisan.name);
         holder.txt_artisan_mobile.setText(artisan.mobile);
@@ -62,8 +61,8 @@ public class foundArtisansAdapter extends RecyclerView.Adapter<foundArtisansAdap
         Glide   .with(ctx)
                 .load(globals.base_url+"/fetch_artisan_profile_picture?artisan_app_id="+artisan.app_id)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                //.diskCacheStrategy(DiskCacheStrategy.NONE)
+                //.skipMemoryCache(true)
                 .placeholder(R.drawable.ic_worker)
                 .into(holder.img_artisan_image);
 

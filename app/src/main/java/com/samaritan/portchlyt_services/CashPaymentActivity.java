@@ -43,7 +43,7 @@ public class CashPaymentActivity extends AppCompatActivity {
     TextView txt_total_amount;
     TextView txt_artisan_name;
     LinearLayout linlay;
-    String tag="CashPayment.java";
+    String tag="CashPaymentActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +70,8 @@ public class CashPaymentActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(globals.base_url+"/fetch_artisan_profile_picture?artisan_app_id="+job.artisan_app_id)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                //.diskCacheStrategy(DiskCacheStrategy.NONE)
+                //.skipMemoryCache(true)
                 .placeholder(R.drawable.ic_worker)
                 .into(img_profile);
 
