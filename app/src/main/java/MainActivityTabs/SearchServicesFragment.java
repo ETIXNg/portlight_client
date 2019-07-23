@@ -276,8 +276,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(1 * 1000);
-        locationRequest.setFastestInterval(1 * 1000);
+        locationRequest.setInterval(10 * 1000);
+        locationRequest.setFastestInterval(10 * 1000);
 
 
         init_location_listner();

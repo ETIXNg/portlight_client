@@ -27,7 +27,7 @@ public class JobsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     static RecyclerView lst_jobs;
 
-    static String tag="jobs fragment adapter";
+    static String tag="JobsFragment";
 
     static Activity ctx;
     public JobsFragment() {

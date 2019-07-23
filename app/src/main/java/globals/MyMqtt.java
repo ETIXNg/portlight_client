@@ -57,11 +57,8 @@ public class MyMqtt extends Service {
     public static MqttAndroidClient mqttClient;
     public static Context ctx;
     static String clientId = "";//this is the client id for this specific device, this is the maintain the correct messages
-    final String username = "uiemrvua";
-    final String password = "cB51Tz-tin54";
 
     public static String tag = "mqtt";
-    public static String mqtt_server = "porchlyt_mqtt_server";
 
 
     //init the mqtt service
@@ -301,9 +298,7 @@ public class MyMqtt extends Service {
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
-        mqttConnectOptions.setMaxInflight(1);
-        //mqttConnectOptions.setUserName(username);
-        //mqttConnectOptions.setPassword(password.toCharArray());
+        mqttConnectOptions.setMaxInflight(10);
 
         try {
             mqttClient.connect(mqttConnectOptions, app.ctx, new IMqttActionListener() {
