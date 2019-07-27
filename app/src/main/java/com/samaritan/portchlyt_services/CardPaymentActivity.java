@@ -76,7 +76,7 @@ public class CardPaymentActivity extends AppCompatActivity {
                     //.setMeta(List < Meta >)
                     .withTheme(R.style.RaveFlutterWave)
                     .isPreAuth(false)//must be false no preauthing is needed
-                    // .setSubAccounts(List < SubAccount >)
+                    //.setSubAccounts(List<SubAccount>)
                     .shouldDisplayFee(true)
                     .initialize();
         } catch (Exception ex) {

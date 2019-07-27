@@ -40,6 +40,8 @@ public class mArtisan extends RealmObject {
     public Location location = new Location(0.0,0.0);
     public boolean synced;
     public String app_id;//the app id of this artisan
+    public String account_bank;
+    public String account_number;
 
 }
 
