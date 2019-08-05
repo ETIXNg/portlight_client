@@ -11,10 +11,13 @@ import android.widget.Toast;
 import com.flutterwave.raveandroid.RaveConstants;
 import com.flutterwave.raveandroid.RavePayActivity;
 import com.flutterwave.raveandroid.RavePayManager;
+import com.flutterwave.raveandroid.responses.SubAccount;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import MainActivityTabs.SearchServicesFragment;
@@ -39,18 +42,35 @@ public class CardPaymentActivity extends AppCompatActivity {
         Realm db = globals.getDB();
         mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
         Double amount = job.getTheTotalPrice();
+
+        //create artisans sub account
+        List<SubAccount> artisan_sub_accounts = new ArrayList<>();
+        try {
+
+            SubAccount artisan_sub_account =
+                    new SubAccount(job.subaccount_id,
+                            globals.rave_flutter_wave_split_ratio
+                            );
+            artisan_sub_accounts.add(artisan_sub_account);
+            //Toast.makeText(this,job.subaccount_id,Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(tag, ex.getMessage());
+        }
+
+        mClient client = db.where(mClient.class).findFirst();
         db.close();
+
 
         String narration = "artisan_payment";
         String currency = "NGN";
         String country = "NG";
-        String txRef = narration + "_" + UUID.randomUUID().toString();
-        String publicKey = "FLWPUBK-002565847dd0b6199bbc831eee3f48fc-X";
-        String encryptionKey = "00b54304c6eb7a9700ac39ff";
-        String email = "email@gmail.com";
-        String fName = "fName";
-        String lName = "lName";
-
+        String txRef = narration + "_"+job.description + "_" + UUID.randomUUID().toString();
+        String publicKey = globals.rave_flutter_wave_public_key;
+        String encryptionKey = globals.rave_flutter_wave_encryption_key;
+        String email = "email@email.com";
+        String fName = "client:"+client.mobile;
+        String lName = "artisan:"+job.artisan_mobile;
 
 
         try {
@@ -72,16 +92,16 @@ public class CardPaymentActivity extends AppCompatActivity {
                     .acceptGHMobileMoneyPayments(false)
                     .acceptUgMobileMoneyPayments(false)
                     .onStagingEnv(true)
-                    .allowSaveCardFeature(false)
+                    //.allowSaveCardFeature(false)
                     //.setMeta(List < Meta >)
                     .withTheme(R.style.RaveFlutterWave)
-                    .isPreAuth(false)//must be false no preauthing is needed
-                    //.setSubAccounts(List<SubAccount>)
+                    .isPreAuth(false)//must be false no pre-authing is needed
+                    .setSubAccounts(artisan_sub_accounts)
                     .shouldDisplayFee(true)
                     .initialize();
         } catch (Exception ex) {
-            Toast.makeText(this, ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(tag, ex.getLocalizedMessage());
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e(tag, ex.getMessage());
         }
 
 
@@ -89,22 +109,21 @@ public class CardPaymentActivity extends AppCompatActivity {
 
 
     //run this on success
-    private void run()
-    {
+    private void run() {
         ProgressDialog pd = new ProgressDialog(CardPaymentActivity.this);
         pd.setMessage(getString(R.string.please_wait));
         pd.show();
         Realm db = globals.getDB();
-        mJobs job = db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
+        mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
         String artisan_app_id = job.artisan_app_id;
         mClient client = db.where(mClient.class).findFirst();
         Ion.with(CardPaymentActivity.this)
                 .load(globals.base_url + "/make_payment_for_artisan")
                 .setBodyParameter("_job_id", job._job_id)
                 .setBodyParameter("client_app_id", client.app_id)
-                .setBodyParameter("artisan_app_id",job.artisan_app_id )
-                .setBodyParameter("amount_payed",job.getTheTotalPrice()+"" )
-                .setBodyParameter("payment_type","card" )
+                .setBodyParameter("artisan_app_id", job.artisan_app_id)
+                .setBodyParameter("amount_payed", job.getTheTotalPrice() + "")
+                .setBodyParameter("payment_type", "card")
                 .asString()
                 .setCallback((e, result) -> {
                     db.close();
@@ -126,12 +145,12 @@ public class CardPaymentActivity extends AppCompatActivity {
                             }
                         } catch (Exception ex) {
                             Toast.makeText(CardPaymentActivity.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
-                            Log.e(tag,ex.getMessage());
+                            Log.e(tag, ex.getMessage());
                             finish();
                         }
                     } else {
                         Toast.makeText(CardPaymentActivity.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
-                        Log.e(tag,"line 121");
+                        Log.e(tag, "line 121");
                         finish();
                     }
                 });
@@ -146,7 +165,7 @@ public class CardPaymentActivity extends AppCompatActivity {
                 //send to server
                 run();
             } else if (resultCode == RavePayActivity.RESULT_ERROR) {
-                Toast.makeText(this,getString(R.string.error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show();
                 finish();
             } else if (resultCode == RavePayActivity.RESULT_CANCELLED) {
                 Toast.makeText(this, getString(R.string.cancelled), Toast.LENGTH_SHORT).show();

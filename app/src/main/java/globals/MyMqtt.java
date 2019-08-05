@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.rtp.RtpStream;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -102,6 +103,38 @@ public class MyMqtt extends Service {
 
                 //route the message to the correct handler
 
+                if(type.equals("enable_client"))
+                {
+
+                    Realm db = globals.getDB();
+                    mClient client = db.where(mClient.class).findFirst();//there is only one client per phone
+                    db.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            client.enabled=true;
+                        }
+                    });
+                    db.close();
+                    create_notification(app.ctx.getString(R.string.your_account_is_now_enabled));
+                    SearchServicesFragment.show_hide_enabled();
+
+                }
+                if(type.equals("disable_client"))
+                {
+
+                    Realm db = globals.getDB();
+                    mClient client = db.where(mClient.class).findFirst();//there is only one client per phone
+                    db.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            client.enabled=false;
+                        }
+                    });
+                    db.close();
+                    create_notification(app.ctx.getString(R.string.your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service));
+                    SearchServicesFragment.show_hide_enabled();
+
+                }
 
                 if (type.equals("job_cancelled")) {
 
@@ -264,10 +297,21 @@ public class MyMqtt extends Service {
                                         job.start_time = LocalDateTime.now().toString();
                                         job.artisan_name = job_json.getString("artisan_name");//add the name of the artisan
                                         job.description = job_json.getString("requested_skills");//any notes the artian may want to note but initially indicate the skills
+
+
+                                        //artisans bank detail
+                                        job.account_bank=artisan.account_bank;
+                                        job.account_number=artisan.account_number;
+                                        job.subaccount_id=artisan.subaccount_id;
+                                        job.subaccount_id_id=artisan.subaccount_id_id;
+
+
+
+
                                         db.insert(job);//save this request
                                         JobsFragment.refreshJobsAdapter();//display the job item in the jobs fragment
                                     } catch (Exception ex) {
-                                        Log.e(tag, ex.getMessage());
+                                        Log.e(tag, "line 272 "+ ex.getMessage());
                                     }
                                 }
                             });

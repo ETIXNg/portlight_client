@@ -22,6 +22,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.net.rtp.RtpStream;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -31,6 +32,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 
@@ -119,6 +121,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     //
     static RelativeLayout relLay1, relLay2;
+    static LinearLayout rel_enabled;
     static ConstraintLayout topView;
     //
     static Context ctx;
@@ -133,7 +136,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     MapView mMapView;
     private static GoogleMap googleMap;
-    static HashMap<String,Marker> map_artisans;//the markers for the map
+    static HashMap<String, Marker> map_artisans;//the markers for the map
 
     public static List<mArtisan> found_artisans;//the list of all the artisans found in this search
     public static List<Integer> found_artisans_rating;//the list of the ratings of the artisans
@@ -194,6 +197,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
         //
         rel_results = (LinearLayout) view.findViewById(R.id.rel_results);
+        rel_enabled = (LinearLayout) view.findViewById(R.id.rel_enabled);
         rel_results.setVisibility(View.GONE);//initially nt visible
         relLay1 = (RelativeLayout) view.findViewById(R.id.relLay1);
         relLay2 = (RelativeLayout) view.findViewById(R.id.relLay2);
@@ -268,8 +272,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         }
 
 
-        //
-
+        //is this client enabled or not
+        show_hide_enabled();
 
         //init location listners
         //todo change the request updates time to something more than 1 second
@@ -280,15 +284,31 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         locationRequest.setFastestInterval(10 * 1000);
 
 
-        init_location_listner();
+        //first time run... check permision
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            //permission granted
+            init_location_listner();
+        }
         //
-        relLay2.setOnClickListener(new View.OnClickListener() {
+        relLay1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                Log.e("l", "requested permission ");
-                init_location_listner();
+                //first check permision
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                } else {
+                    //permission granted
+                    init_location_listner();
+                }
             }
         });
 
@@ -318,6 +338,17 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     //function to do the web service call to search for the artisan
     public static void execSearchForAtisan() {
+
+        if(!globals.is_client_enabled())
+        {
+            Toast.makeText(
+                    activity_context
+                    ,activity_context.getString(R.string.your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service)
+                    ,Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
         //dont search unles you have the coordinates
         if (wayLatitude == 0 || wayLongitude == 0) {
             Snackbar.make(topView, ctx.getString(R.string.enable_location_settings_first), Snackbar.LENGTH_SHORT).show();
@@ -437,6 +468,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
         rel_results.setVisibility(View.VISIBLE);//show it
         RecyclerView lst_artisans_results = (RecyclerView) view.findViewById(R.id.lst_artisans_results);
+        LinearLayoutManager lm = new LinearLayoutManager(activity_context, RecyclerView.HORIZONTAL, false);
+        lst_artisans_results.setLayoutManager(lm);
         found_artisans.add(artisan);
         found_artisans_rating.add(artisan_rating);
 
@@ -446,7 +479,9 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
 
         foundArtisansAdapter fa_adapter = new foundArtisansAdapter(ctx, found_artisans, found_artisans_rating);
+        fa_adapter.setHasStableIds(true);
         lst_artisans_results.setAdapter(fa_adapter);
+        fa_adapter.notifyDataSetChanged();
 
         update_artisan_on_map_change_icon_to_selected(artisan);//display the selected artisan
         rippleBackground.stopRippleAnimation();//stop at the first artisan found
@@ -454,8 +489,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     }
 
 
-    private static void clear_all_selected_jobs()
-    {
+    private static void clear_all_selected_jobs() {
         String[] skills = activity_context.getResources().getStringArray(R.array.job_categories);
         adp = new skillsAdapter(skills);
         lst_skills.setAdapter(adp);
@@ -488,7 +522,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                 Geocoder geocoder;
                 List<Address> addresses;
                 try {
-                    my_address=getString(R.string.unknown_location);
+                    my_address = getString(R.string.unknown_location);
                     geocoder = new Geocoder(getActivity(), Locale.getDefault());
                     addresses = geocoder.getFromLocation(wayLatitude, wayLongitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                     String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
@@ -503,8 +537,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                     if (knownName.equals(null))
                         knownName = "";//this to ensure that we dont pull null values in the address
                     my_address = country + ", " + city + ", " + state + ", " + knownName;
-                    if(my_address.equals("") || my_address.equals(" ") || TextUtils.isEmpty(my_address))
-                        my_address=getString(R.string.unknown_location);
+                    if (my_address.equals("") || my_address.equals(" ") || TextUtils.isEmpty(my_address))
+                        my_address = getString(R.string.unknown_location);
 
                 } catch (Exception ex) {
 
@@ -524,7 +558,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                             }
                         }
                     });
-                }catch (Exception ex){
+                } catch (Exception ex) {
 
                 }
 
@@ -586,11 +620,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     }//.onrequest results
 
 
-
-
     //remove the selected icon to show a now regular icon, when job is completed,cancelled, or closed
-    public static void remove_selected_artisan_icon(String artisan_app_id)
-    {
+    public static void remove_selected_artisan_icon(String artisan_app_id) {
         Marker marker = map_artisans.get(artisan_app_id);//get the specific marker
         marker.remove();//remove from map
         map_artisans.remove(artisan_app_id);//remove from list
@@ -602,8 +633,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
 
         //replace marker
-        if(map_artisans.containsKey(artisan.app_id))
-        {
+        if (map_artisans.containsKey(artisan.app_id)) {
             Marker marker = map_artisans.get(artisan.app_id);//get the specific marker
             marker.remove();//remove from map
             map_artisans.remove(artisan.app_id);//remove from list
@@ -611,7 +641,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             //add a new marker with the new icon
             marker = googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(marker.getPosition().latitude, marker.getPosition().longitude))
-                    .title(TextUtils.join(" ",artisan.skills))
+                    .title(TextUtils.join(" ", artisan.skills))
                     //.snippet(skill)
                     .rotation((float) 3.5)
                     .icon(bitmapDescriptorFromVector(activity_context, R.drawable.ic_map_worker_icon_selected)));
@@ -626,23 +656,20 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
 
     //set or update the artisan pointer on the screen
-    public static void update_artisan_on_map(String artisan_app_id, String artisan_lat, String artisan_lng,String skill) {
+    public static void update_artisan_on_map(String artisan_app_id, String artisan_lat, String artisan_lng, String skill) {
 
 
         double latitude = Double.parseDouble(artisan_lat);
         double longitude = Double.parseDouble(artisan_lng);
 
 
-
         //update marker position if already present
-        if(map_artisans.containsKey(artisan_app_id))
-        {
+        if (map_artisans.containsKey(artisan_app_id)) {
             Marker marker = map_artisans.get(artisan_app_id);
-            marker.setPosition(new LatLng(latitude,longitude));
+            marker.setPosition(new LatLng(latitude, longitude));
         }
         //else add it
-        else
-        {
+        else {
 
             Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(latitude, longitude))
@@ -655,7 +682,6 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             map_artisans.put(artisan_app_id, marker);
 
         }
-
 
 
     }
@@ -673,10 +699,24 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             Canvas canvas = new Canvas(bitmap);
             vectorDrawable.draw(canvas);
             return BitmapDescriptorFactory.fromBitmap(bitmap);
-        }catch (Exception ex){
-            Toast.makeText(activity_context,ex.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
+            Toast.makeText(activity_context, ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             return null;
         }
+    }
+
+    //show or hide the enabled
+    public static void show_hide_enabled() {
+        Realm db = globals.getDB();
+        mClient client = db.where(mClient.class).findFirst();//there is only one client per phone
+        if (!client.enabled) {
+            rel_enabled.setVisibility(View.VISIBLE);
+            MediaPlayer mp = MediaPlayer.create(activity_context, R.raw.plucky);
+            mp.start();//add sound for the notification
+        } else {
+            rel_enabled.setVisibility(View.GONE);
+        }
+        db.close();
     }
 
 }//fragment

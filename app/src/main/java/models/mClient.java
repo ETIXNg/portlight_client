@@ -17,4 +17,5 @@ public class mClient extends RealmObject {
     public boolean registered;
     public boolean synced;
     public String app_id;//the app id of this client
+    public boolean enabled=true;//i this artisan enabled or disabled
 }

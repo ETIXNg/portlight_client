@@ -27,10 +27,11 @@ public class app extends MultiDexApplication {
         MultiDex.install(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()
                 .name("porchlyt_services.realm")
-                .schemaVersion(13)
+                .schemaVersion(14)
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfig);
+
 
 
         TypefaceProvider.registerDefaultIconSets();

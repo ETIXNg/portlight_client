@@ -114,5 +114,11 @@
     <string name="cancel_job">Cancel job</string>
     <string name="job_cancelled">Job cancelled</string>
     <string name="channel_name">porchlyt</string>
+    <string name="your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service">
+        Your temporarily banned from using this service as you may have violated our terms of service
+    </string>
+
+    <string name="your_account_is_now_enabled">Your account is now enabled</string>
+
 
 </resources>

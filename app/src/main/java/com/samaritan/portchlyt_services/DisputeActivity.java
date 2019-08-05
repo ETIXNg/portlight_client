@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import globals.*;
 import io.realm.Realm;
+import models.mClient;
 import models.mJobs.mJobs;
 
 public class DisputeActivity extends AppCompatActivity {
@@ -151,6 +152,7 @@ public class DisputeActivity extends AppCompatActivity {
 
         Realm db = globals.getDB();
         mJobs job = db.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
+        mClient client = db.where(mClient.class).findFirst();
         ProgressDialog pd = new ProgressDialog(DisputeActivity.this);
         pd.setMessage(getString(R.string.please_wait));
         pd.show();
@@ -159,6 +161,7 @@ public class DisputeActivity extends AppCompatActivity {
                 .setBodyParameter("_job_id", _job_id)
                 .setBodyParameter("reason_for_dispute", reason_for_dispute)
                 .setBodyParameter("artisan_app_id", job.artisan_app_id)
+                .setBodyParameter("client_app_id", client.app_id)
                 .asString()
                 .setCallback((e, result) -> {
                     pd.dismiss();

@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
@@ -60,6 +61,7 @@ public class ListOfArtisansFragment extends Fragment {
 
     static Activity activity_context;
     RelativeLayout lin_bottom;
+    RelativeLayout lin_enabled;
     Button btn_refresh_artisans;
     ImageView img_close_pane;
 
@@ -91,6 +93,7 @@ public class ListOfArtisansFragment extends Fragment {
         artisans_list_data = new ArrayList<>();
         activity_context = getActivity();
         lin_bottom  = (RelativeLayout)v.findViewById(R.id.lin_bottom);
+        lin_enabled  = (RelativeLayout)v.findViewById(R.id.lin_enabled);
         lin_bottom .setVisibility(View.GONE);
 
 
@@ -205,7 +208,12 @@ public class ListOfArtisansFragment extends Fragment {
     private void get_more_data() {
 
 
-
+        if(!globals.is_client_enabled())
+        {
+            lin_enabled.setVisibility(View.VISIBLE);//show it
+            return;
+        }
+        lin_enabled.setVisibility(View.GONE);//hide otherwise
         progress_bar.setVisibility(View.VISIBLE);
         String city = spinner_city.getSelectedItem().toString();
         String skill = spinner_skill.getSelectedItem().toString();

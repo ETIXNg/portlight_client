@@ -56,6 +56,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCkHDfN-tHxIsL7WB6EAcd4m4F9KPtzP9E" />
 
+        <meta-data
+            android:name="co.paystack.android.PublicKey"
+            android:value="pk_test_de0b7a459ac00317bb9dc88a8c87b33592873b84"/>
+
+
         <uses-library
             android:name="com.google.android.maps"
             android:required="true" />

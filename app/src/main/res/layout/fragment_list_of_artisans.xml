@@ -157,6 +157,25 @@
         </RelativeLayout>
         <!--.//bottom view for the infomation-->
 
+        <!--bottom view for the infomation-->
+        <RelativeLayout
+            android:id="@+id/lin_enabled"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_weight="0"
+            android:alpha="0.4"
+            android:background="@color/light_grey_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service" />
+
+        </RelativeLayout>
+        <!--.//bottom view for the infomation-->
+
     </LinearLayout>
 
 </androidx.slidingpanelayout.widget.SlidingPaneLayout>

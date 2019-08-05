@@ -42,6 +42,8 @@ public class mArtisan extends RealmObject {
     public String app_id;//the app id of this artisan
     public String account_bank;
     public String account_number;
+    public String subaccount_id;
+    public String subaccount_id_id;
 
 }
 

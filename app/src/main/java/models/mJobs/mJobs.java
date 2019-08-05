@@ -12,6 +12,7 @@ import java.util.UUID;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import models.mArtisan.mArtisan;
 
 //this is a single job per visit
 //this job may have many sub tasks in the job
@@ -33,10 +34,24 @@ public class mJobs extends RealmObject {
     public double price;
     public String description;//any notes the artisan may want to note
     public RealmList<mTask> tasks;
-    public mJobs(){
-        start_time = LocalDateTime.now().toString();
-    }
     public String job_status = JobStatus.opened.toString();
+
+    //artisans bank details
+    public String account_bank;
+    public String account_number;
+    public String subaccount_id;
+    public String subaccount_id_id;
+
+
+    //contructor
+    public mJobs(){
+
+        start_time = LocalDateTime.now().toString();
+        tasks= new RealmList<>();
+    }
+
+
+
     public double getTheTotalPrice() {
         double total = 0;
         for (mTask t : this.tasks) {

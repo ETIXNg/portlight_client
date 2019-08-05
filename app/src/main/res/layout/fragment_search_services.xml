@@ -14,17 +14,16 @@
         sothree:umanoPanelHeight="68dp"
         sothree:umanoShadowHeight="4dp">
 
+        <!--//top layout of sliding up panel-->
         <LinearLayout
             xmlns:app="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <!--//begin main layout-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/topView"
                 xmlns:app="http://schemas.android.com/tools"
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#fff"
@@ -98,6 +97,37 @@
 
                         </LinearLayout>
 
+                        <!--notify enable / disabled client-->
+                        <LinearLayout
+                            android:id="@+id/rel_enabled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="50dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="@+id/rippleBG">
+                            <!--horizontal rule-->
+                            <View
+                                android:layout_margin="4dp"
+                                android:layout_height="0.1dp"
+                                android:layout_width="match_parent"
+                                android:background="#000"/>
+                            <!--end horizontal rule-->
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp">
+
+                                <TextView
+                                    android:textColor="#000"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service"
+                                    android:textSize="10dp"
+                                    />
+                            </LinearLayout>
+                        </LinearLayout>
+                        <!--end notify enable / disabled client-->
 
                     </LinearLayout>
 
@@ -133,15 +163,15 @@
                             android:layout_weight="0.1"
                             android:src="@drawable/ic_settings_black_24dp" />
                     </LinearLayout>
+
+
                 </RelativeLayout>
 
-
-                <!--layout at the bottom of the screen to display the search results-->
+                <!--search results-->
                 <LinearLayout
                     android:id="@+id/rel_results"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:background="@android:drawable/dialog_holo_light_frame"
                     android:minHeight="100dp"
                     android:orientation="vertical"
@@ -160,25 +190,27 @@
                             android:textSize="10dp"
                             android:textStyle="bold" />
                     </LinearLayout>
-
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/lst_artisans_results"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"></androidx.recyclerview.widget.RecyclerView>
-
-
+                        />
                 </LinearLayout>
+                <!--end search results-->
+
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <!--//.end main layout-->
-        </LinearLayout>
 
+
+        </LinearLayout>
+        <!--//end top layout of sliding up panel-->
+
+        <!--bottom part of sliding up panel-->
         <LinearLayout
             xmlns:app="http://schemas.android.com/tools"
             android:layout_width="match_parent"
@@ -239,5 +271,8 @@
 
             <!--//.end sliding up layout-->
         </LinearLayout>
+        <!--end bottom part of sliding up panel-->
+
+
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 </LinearLayout>
