@@ -9,9 +9,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.slidingpanelayout.widget.SlidingPaneLayout;
@@ -24,16 +21,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 import com.samaritan.portchlyt_services.R;
-import com.samaritan.portchlyt_services.app;
 
 import org.json.JSONArray;
 
@@ -41,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import adapters.ListOfArtisansPager.mList_of_Artisans_Adapter;
+import adapters.mList_of_Artisans_Adapter;
 import models.ListOfArtisansModel;
 import globals.*;
 
@@ -251,8 +245,8 @@ public class ListOfArtisansFragment extends Fragment {
                                 for (int i = 0; i < json_a.length(); i++) {
                                     ListOfArtisansModel artisan = new Gson().fromJson(json_a.get(i).toString(), ListOfArtisansModel.class);
                                     artisans_list_data.add(artisan);//add to data set
-                                    artisans_adapter.notifyItemInserted(artisans_list_data.size());//notify the adapter
                                 }
+                                artisans_adapter.notifyItemInserted(artisans_list_data.size());//notify the adapter
                                 page++;
                                 artisans_adapter.setLoaded();//set loaded
 

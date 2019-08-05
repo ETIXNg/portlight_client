@@ -1,21 +1,15 @@
-package adapters.ListOfArtisansPager;
+package adapters;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,11 +28,9 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
 
     private Activity activity_context;
     List<ListOfArtisansModel> artisans;
-
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
-
     private OnLoadMoreListener onLoadMoreListener;
 
 
@@ -109,6 +101,9 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
             if(position%2==0)
             {
                 holder.lin_lay.setBackgroundColor(app.ctx.getResources().getColor(R.color.light_grey_bg) );
+            }
+            else {
+                holder.lin_lay.setBackgroundColor(app.ctx.getResources().getColor(R.color.white) );
             }
 
             //load image into imageview
