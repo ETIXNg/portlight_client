@@ -38,6 +38,7 @@ import java.util.List;
 import adapters.mList_of_Artisans_Adapter;
 import models.ListOfArtisansModel;
 import globals.*;
+import models.mArtisan.mArtisan;
 
 public class ListOfArtisansFragment extends Fragment {
 
@@ -49,7 +50,10 @@ public class ListOfArtisansFragment extends Fragment {
     Spinner spinner_skill;
     RecyclerView recyclerView;
     mList_of_Artisans_Adapter artisans_adapter;
-    static int page = 1;
+
+    static int page = 0;//start at zero
+    int per_page = 10;
+
     ImageView img_search;
     ProgressBar progress_bar;
 
@@ -58,10 +62,11 @@ public class ListOfArtisansFragment extends Fragment {
     RelativeLayout lin_enabled;
     Button btn_refresh_artisans;
     ImageView img_close_pane;
+    boolean loading;
 
 
     private static final String tag = "ListOfArtisansFragment";
-    private List<ListOfArtisansModel> artisans_list_data;
+    private List<ListOfArtisansModel> artisans_list_data = new ArrayList<>();
     private Handler handler;
 
     public ListOfArtisansFragment() {
@@ -86,15 +91,14 @@ public class ListOfArtisansFragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         artisans_list_data = new ArrayList<>();
         activity_context = getActivity();
-        lin_bottom  = (RelativeLayout)v.findViewById(R.id.lin_bottom);
-        lin_enabled  = (RelativeLayout)v.findViewById(R.id.lin_enabled);
-        lin_bottom .setVisibility(View.GONE);
-
+        lin_bottom = (RelativeLayout) v.findViewById(R.id.lin_bottom);
+        lin_enabled = (RelativeLayout) v.findViewById(R.id.lin_enabled);
+        lin_bottom.setVisibility(View.GONE);
 
 
         //
-        sliding_panel=(SlidingPaneLayout)v.findViewById(R.id.sliding_panel);
-        img_close_pane = (ImageView)v.findViewById(R.id.img_close_pane);
+        sliding_panel = (SlidingPaneLayout) v.findViewById(R.id.sliding_panel);
+        img_close_pane = (ImageView) v.findViewById(R.id.img_close_pane);
         img_close_pane.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,7 +130,7 @@ public class ListOfArtisansFragment extends Fragment {
 
 
         //
-        btn_refresh_artisans = (Button)v.findViewById(R.id.btn_refresh_artisans);
+        btn_refresh_artisans = (Button) v.findViewById(R.id.btn_refresh_artisans);
         btn_refresh_artisans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,24 +143,28 @@ public class ListOfArtisansFragment extends Fragment {
         });
 
         //
-        get_more_data();
-        artisans_adapter = new mList_of_Artisans_Adapter(getActivity(), artisans_list_data, recyclerView);
+        artisans_adapter = new mList_of_Artisans_Adapter(getActivity(), artisans_list_data);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int totalItemCount = artisans_adapter.getItemCount();
+                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                if (totalItemCount <= (lastVisibleItem + 1)) {
+                    //dont insert yet another if already loading
+                    if (loading) {
+                        return;
+                    }
+                    get_more_data();
+                }
+            }
+        });
         artisans_adapter.setHasStableIds(true);
         recyclerView.setAdapter(artisans_adapter);
 
-        artisans_adapter.setOnLoadMoreListener(new mList_of_Artisans_Adapter.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
 
-                artisans_list_data.add(null);
-                artisans_adapter.notifyItemInserted(artisans_list_data.size() - 1);
-
-                artisans_list_data.remove(artisans_list_data.size() - 1);//remove the progress dialog item
-                get_more_data();//fetch more data
-            }
-        });
-
-
+        get_more_data();//initial pull
         return v;
     }
 
@@ -201,14 +209,14 @@ public class ListOfArtisansFragment extends Fragment {
     //only get more data and increment the page
     private void get_more_data() {
 
-
-        if(!globals.is_client_enabled())
-        {
+        loading=true;
+        if (!globals.is_client_enabled()) {
             lin_enabled.setVisibility(View.VISIBLE);//show it
             return;
         }
         lin_enabled.setVisibility(View.GONE);//hide otherwise
         progress_bar.setVisibility(View.VISIBLE);
+
         String city = spinner_city.getSelectedItem().toString();
         String skill = spinner_skill.getSelectedItem().toString();
 
@@ -217,6 +225,7 @@ public class ListOfArtisansFragment extends Fragment {
                 .setBodyParameter("page", page + "")
                 .setBodyParameter("city", city + "")
                 .setBodyParameter("skill", skill + "")
+                .setBodyParameter("per_page", per_page + "")
                 .asString()
                 .withResponse()
                 .setCallback((e, result) -> {
@@ -230,41 +239,36 @@ public class ListOfArtisansFragment extends Fragment {
                         }
                     }, 1000);
 
+                    if (e != null) {
+                        Log.e(tag, e + "");
+                        return;
+                    }
 
-                    if (e == null) {
-                        if (result == null) {
-                            Log.e(tag, "line 136 result is null");
-                            return;
-                        } else {
-                            Log.e(tag, "result " + result.getResult());
-                            try {
+                    if (result == null) {
+                        Log.e(tag, "result is null");
+                        return;
+                    }
 
-                                artisans_adapter.notifyItemRemoved(artisans_list_data.size());//tell it that we have removed the progress loading item
+                    Log.e(tag, "result: " + result);
 
-                                JSONArray json_a = new JSONArray(result.getResult());
-                                for (int i = 0; i < json_a.length(); i++) {
-                                    ListOfArtisansModel artisan = new Gson().fromJson(json_a.get(i).toString(), ListOfArtisansModel.class);
-                                    artisans_list_data.add(artisan);//add to data set
-                                }
-                                artisans_adapter.notifyItemInserted(artisans_list_data.size());//notify the adapter
-                                page++;
-                                artisans_adapter.setLoaded();//set loaded
-
-
-                            } catch (Exception ex) {
-                                Log.e(tag, "line 148 " + ex.getLocalizedMessage());
-                            }
-                            if(artisans_list_data.size()>0)
-                            {
-                                lin_bottom.setVisibility(View.VISIBLE);
-                            }
-                            else
-                            {
-                                lin_bottom.setVisibility(View.GONE);
-                            }
+                    try {
+                        JSONArray json_a = new JSONArray(result.getResult());
+                        for (int i = 0; i < json_a.length(); i++) {
+                            ListOfArtisansModel artisan = new Gson().fromJson(json_a.get(i).toString(), ListOfArtisansModel.class);
+                            artisans_list_data.add(artisan);//add to data set
+                            artisans_adapter.notifyItemInserted(artisans_list_data.size() - 1);
                         }
+                        page++;
+                    } catch (Exception ex) {
+                        Log.e(tag, "line 148 " + ex.getLocalizedMessage());
+                    }
+                    finally {
+                        loading=false;
+                    }
+                    if (artisans_list_data.size() > 0) {
+                        lin_bottom.setVisibility(View.VISIBLE);
                     } else {
-                        Log.e(tag, "line 138 " + e.getLocalizedMessage());
+                        lin_bottom.setVisibility(View.GONE);
                     }
                 });
     }//.get_more_data
@@ -300,9 +304,8 @@ public class ListOfArtisansFragment extends Fragment {
                 });
         try {
             pictureDialog.show();
-        }catch (Exception ex)
-        {
-            Log.e(tag,"line 258 "+ex.getMessage());
+        } catch (Exception ex) {
+            Log.e(tag, "line 258 " + ex.getMessage());
         }
     }
 

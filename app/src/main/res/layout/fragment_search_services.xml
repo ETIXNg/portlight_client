@@ -3,11 +3,12 @@
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:app="http://schemas.android.com/tools"
         android:id="@+id/sliding_layout"
-        xmlns:app="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
@@ -15,15 +16,14 @@
         sothree:umanoShadowHeight="4dp">
 
         <!--//top layout of sliding up panel-->
-        <LinearLayout
-            xmlns:app="http://schemas.android.com/tools"
+        <LinearLayout xmlns:app="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/topView"
+            <RelativeLayout
                 xmlns:app="http://schemas.android.com/tools"
+                android:id="@+id/topView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#fff"
@@ -41,20 +41,21 @@
 
 
                 <com.skyfishjy.library.RippleBackground
-                    android:id="@+id/rippleBG"
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/rippleBG"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:rb_color="#FFCDD2"
+                    app:rb_duration="2500"
                     app:rb_radius="32dp"
                     app:rb_rippleAmount="4"
-                    app:rb_duration="2500"
                     app:rb_scale="6">
 
 
                 </com.skyfishjy.library.RippleBackground>
 
+              <!--views here-->
                 <RelativeLayout
                     android:id="@+id/relLay1"
                     android:layout_width="match_parent"
@@ -79,19 +80,19 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_gravity="center_vertical"
                                 android:id="@+id/txt_location"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:layout_weight="0.9"
                                 android:text="@string/we_need_your_location_to_provide_you_this_service"
                                 android:textColor="#000"
                                 android:textSize="12dp" />
 
                             <ImageView
-                                android:layout_gravity="center_vertical"
                                 android:layout_width="0dp"
                                 android:layout_height="25dp"
+                                android:layout_gravity="center_vertical"
                                 android:layout_weight="0.1"
                                 android:src="@drawable/ic_edit_location_black_24dp" />
 
@@ -107,10 +108,10 @@
                             app:layout_constraintBottom_toBottomOf="@+id/rippleBG">
                             <!--horizontal rule-->
                             <View
-                                android:layout_margin="4dp"
-                                android:layout_height="0.1dp"
                                 android:layout_width="match_parent"
-                                android:background="#000"/>
+                                android:layout_height="0.1dp"
+                                android:layout_margin="4dp"
+                                android:background="#000" />
                             <!--end horizontal rule-->
 
                             <LinearLayout
@@ -119,12 +120,11 @@
                                 android:padding="5dp">
 
                                 <TextView
-                                    android:textColor="#000"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="@string/your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service"
-                                    android:textSize="10dp"
-                                    />
+                                    android:textColor="#000"
+                                    android:textSize="10dp" />
                             </LinearLayout>
                         </LinearLayout>
                         <!--end notify enable / disabled client-->
@@ -190,43 +190,68 @@
                             android:textSize="10dp"
                             android:textStyle="bold" />
                     </LinearLayout>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/lst_artisans_results"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        />
+                        android:orientation="horizontal" />
                 </LinearLayout>
                 <!--end search results-->
 
 
 
+                <RelativeLayout
+                    android:id="@+id/rel_cancel_request"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="20dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"
+                    >
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ImageView
+                        android:id="@+id/img_cancel_icon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_cancel_red" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/img_cancel_icon"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_horizontal"
+                        android:text="@string/cancel"
+                        android:textColor="#F00"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
 
+            </RelativeLayout>
 
 
         </LinearLayout>
         <!--//end top layout of sliding up panel-->
 
         <!--bottom part of sliding up panel-->
-        <LinearLayout
-            xmlns:app="http://schemas.android.com/tools"
+        <LinearLayout xmlns:app="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center|top">
             <!--begin sliding up layout-->
 
-            <LinearLayout
-                xmlns:app="http://schemas.android.com/tools"
-                android:weightSum="1"
+            <LinearLayout xmlns:app="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="1">
 
-                <LinearLayout
-                    xmlns:app="http://schemas.android.com/tools"
+                <LinearLayout xmlns:app="http://schemas.android.com/tools"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/light_grey_bg"
@@ -254,7 +279,6 @@
                     android:padding="5dp" />
 
                 <Button
-                    android:textColor="#fff"
                     android:id="@+id/btn_find_now"
                     android:layout_width="match_parent"
                     android:layout_height="57dp"
@@ -264,7 +288,7 @@
                     android:layout_weight="0"
                     android:background="@color/primary"
                     android:text="@string/find_now"
-                     />
+                    android:textColor="#fff" />
 
 
             </LinearLayout>
@@ -275,4 +299,6 @@
 
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
 </LinearLayout>

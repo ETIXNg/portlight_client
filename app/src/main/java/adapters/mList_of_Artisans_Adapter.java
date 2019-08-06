@@ -28,33 +28,11 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
 
     private Activity activity_context;
     List<ListOfArtisansModel> artisans;
-    private int visibleThreshold = 5;
-    private int lastVisibleItem, totalItemCount;
-    private boolean loading;
-    private OnLoadMoreListener onLoadMoreListener;
 
 
-    public mList_of_Artisans_Adapter(Activity activity_context, List<ListOfArtisansModel> artisans,RecyclerView recyclerView) {
+    public mList_of_Artisans_Adapter(Activity activity_context, List<ListOfArtisansModel> artisans) {
         this.artisans = artisans;
         this.activity_context = activity_context;
-
-        if(recyclerView.getLayoutManager() instanceof LinearLayoutManager){
-            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    totalItemCount = linearLayoutManager.getItemCount();
-                    lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                    if(!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
-                        if(onLoadMoreListener != null){
-                            onLoadMoreListener.onLoadMore();
-                        }
-                        loading = true;
-                    }
-                }
-            });
-        }//.if
     }//.constructor
 
 
@@ -68,9 +46,6 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
     @NonNull
     @Override
     public myHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            //View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.artisan_profile_item, parent, false);
-            //return new myHolder(itemView);
-
         myHolder viewHolder = null;
         if(viewType == 1){
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.artisan_profile_item, parent, false);
@@ -88,8 +63,6 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
         ListOfArtisansModel artisan = artisans.get(position);
 
         if(holder instanceof myHolder){
-
-
 
             holder.ratingBar.setRating(artisan.rating);
             holder.txt_artisan_name.setText(artisan.name);
@@ -145,20 +118,6 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
         return position;
     }
 
-    public void setLoad(){
-        loading = false;
-    }
-
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener){
-        this.onLoadMoreListener = onLoadMoreListener;
-    }
-    public interface OnLoadMoreListener {
-        void onLoadMore();
-    }
-    public void setLoaded() {
-        loading = false;
-    }
-
 
     public class myHolder extends RecyclerView.ViewHolder {
         public ImageView img_profile;
@@ -186,7 +145,7 @@ public class mList_of_Artisans_Adapter extends RecyclerView.Adapter<mList_of_Art
     }//.class
 
 
-    public class ProgressViewHolder extends mList_of_Artisans_Adapter.myHolder{
+    public class ProgressViewHolder extends myHolder{
         public ProgressBar progressBar;
         public ProgressViewHolder(View itemView) {
             super(itemView);

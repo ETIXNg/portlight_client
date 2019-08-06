@@ -1,55 +1,33 @@
 package MainActivityTabs;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.net.rtp.RtpStream;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.AbsListView;
-import android.widget.AbsoluteLayout;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -63,11 +41,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -75,32 +51,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.Response;
 import com.samaritan.portchlyt_services.R;
-import com.samaritan.portchlyt_services.SelectJobsActivity;
-import com.samaritan.portchlyt_services.app;
 import com.skyfishjy.library.RippleBackground;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.UUID;
-
-import javax.xml.transform.Result;
 
 import adapters.foundArtisansAdapter;
 import adapters.skillsAdapter;
@@ -122,7 +85,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     //
     static RelativeLayout relLay1, relLay2;
     static LinearLayout rel_enabled;
-    static ConstraintLayout topView;
+    static RelativeLayout topView;
+    RelativeLayout rel_cancel_request;
     //
     static Context ctx;
     public static MediaPlayer mp;
@@ -192,7 +156,9 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
         //
         view = inflater.inflate(R.layout.fragment_search_services, container, false);
-        topView = (ConstraintLayout) view.findViewById(R.id.topView);
+        topView = (RelativeLayout) view.findViewById(R.id.topView);
+        rel_cancel_request = (RelativeLayout) view.findViewById(R.id.rel_cancel_request);
+        rel_cancel_request.setVisibility(View.GONE);
         sliding_layout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
 
         //
@@ -312,6 +278,16 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             }
         });
 
+        //cancel the request
+        rel_cancel_request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchIsCompleted();//closed the media player and also the ripple bg
+                rel_results.setVisibility(View.GONE);
+                rel_cancel_request.setVisibility(View.GONE);
+            }
+        });
+
         return view;
     }
 
@@ -337,7 +313,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
 
     //function to do the web service call to search for the artisan
-    public static void execSearchForAtisan() {
+    public void execSearchForAtisan() {
 
         if(!globals.is_client_enabled())
         {
@@ -396,6 +372,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                 mp.setLooping(true);
                 mp.start();
 
+                rel_cancel_request.setVisibility(View.VISIBLE);
                 //
                 Ion.with(ctx)
                         .load(globals.base_url + "/findServiceArtisan")
@@ -414,6 +391,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                         });
             } catch (Exception ex) {
                 mp.stop();
+                rel_cancel_request.setVisibility(View.GONE);
                 rippleBackground.stopRippleAnimation();
                 Log.e(tag, "line 335 " + ex.getMessage());
                 Snackbar.make(topView, ctx.getString(R.string.error_occured), Snackbar.LENGTH_LONG).show();

@@ -27,8 +27,12 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         android:windowSoftInputMode="stateHidden">
-        <activity android:name=".NotificationActivity"></activity>
-        <activity android:name=".CancelJobActivity" />
+        <activity
+            android:name=".NotificationActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".CancelJobActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ViewArtisanProfilePictureActivity"
             android:screenOrientation="portrait" />
@@ -58,7 +62,7 @@
 
         <meta-data
             android:name="co.paystack.android.PublicKey"
-            android:value="pk_test_de0b7a459ac00317bb9dc88a8c87b33592873b84"/>
+            android:value="pk_test_de0b7a459ac00317bb9dc88a8c87b33592873b84" />
 
 
         <uses-library
@@ -67,10 +71,8 @@
 
         <activity
             android:name=".NoArtisansFoundActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MyDialogThemeModal" />
-        <activity
-            android:name=".SelectJobsActivity"
-            android:theme="@style/MyDialogTheme" />
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait" />
@@ -95,7 +97,7 @@
 
         <service
             android:name="globals.MyMqtt"
-            android:exported="false"/>
+            android:exported="false" />
 
     </application>
 
