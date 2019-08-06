@@ -151,7 +151,9 @@ public class ListOfArtisansFragment extends Fragment {
                 final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int totalItemCount = artisans_adapter.getItemCount();
                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                if (totalItemCount <= (lastVisibleItem + 1)) {
+                //if (totalItemCount <= (lastVisibleItem + 1))
+                if (!recyclerView.canScrollVertically(1))
+                {
                     //dont insert yet another if already loading
                     if (loading) {
                         return;

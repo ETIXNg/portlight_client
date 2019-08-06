@@ -194,16 +194,17 @@ public class MyMqtt extends Service {
                             @Override
                             public void execute(Realm realm) {
                                 if (job.end_time == null)
-                                {//make sure we dont change the date again even if new payment if recieved
+                                {
+                                    //make sure we dont change the date again even if new payment if recieved
                                     job.end_time = LocalDateTime.now().toString();//set the end time
-                                    job.job_status= JobStatus.closed.toString();
-                                    JobsFragment.refreshJobsAdapter();
-                                    Intent rating = new Intent(app.ctx, ArtisanRatingActivity.class);
-                                    rating.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    rating.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    rating.putExtra("_job_id", _job_id);
-                                    app.ctx.startActivity(rating);
                                 }
+                                job.job_status= JobStatus.closed.toString();
+                                JobsFragment.refreshJobsAdapter();
+                                Intent rating = new Intent(app.ctx, ArtisanRatingActivity.class);
+                                rating.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                rating.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                rating.putExtra("_job_id", _job_id);
+                                app.ctx.startActivity(rating);
                             }
                         });
                         //remove icon and let the plain icon come up

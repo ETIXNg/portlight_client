@@ -116,6 +116,10 @@ public class mjobsAdapter extends RecyclerView.Adapter<mjobsAdapter.myViewHolder
         if (job.job_status.equals(JobStatus.cancelled.toString())) {
             vh.img_status.setImageResource((R.drawable.ic_cancel_black_24dp));
         }
+
+        if (job.job_status.equals(JobStatus.disputed.toString())) {
+            vh.img_status.setImageResource((R.drawable.ic_announcement_black_24dp));
+        }
     }
 
     class myViewHolder extends RecyclerView.ViewHolder {

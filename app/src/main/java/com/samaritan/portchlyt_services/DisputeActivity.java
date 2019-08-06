@@ -26,9 +26,11 @@ import com.koushikdutta.ion.Ion;
 import org.json.JSONObject;
 
 
+import MainActivityTabs.JobsFragment;
 import globals.*;
 import io.realm.Realm;
 import models.mClient;
+import models.mJobs.JobStatus;
 import models.mJobs.mJobs;
 
 public class DisputeActivity extends AppCompatActivity {
@@ -175,6 +177,18 @@ public class DisputeActivity extends AppCompatActivity {
                             String res = json.getString("res");
                             String msg = json.getString("msg");
                             if (res.equals("ok")) {
+                                Realm db_=globals.getDB();
+                                db.executeTransaction(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        mJobs job=db_.where(mJobs.class).equalTo("_job_id",_job_id).findFirst();
+                                        job.job_status= JobStatus.disputed.toString();
+                                        JobsFragment.refreshJobsAdapter();
+                                    }
+                                });
+                                db.close();
+
+
                                 Intent dispute_notification = new Intent(DisputeActivity.this, DisputeNotificationActivity.class);
                                 startActivity(dispute_notification);
                             } else {

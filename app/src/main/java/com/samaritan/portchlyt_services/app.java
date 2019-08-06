@@ -1,6 +1,7 @@
 package com.samaritan.portchlyt_services;
 
 import android.content.Context;
+
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
@@ -18,6 +19,7 @@ import models.appSettings;
 public class app extends MultiDexApplication {
 
     public static Context ctx;
+    public static RealmConfiguration realmConfig;
 
     @Override
     public void onCreate() {
@@ -25,13 +27,12 @@ public class app extends MultiDexApplication {
         JodaTimeAndroid.init(this);
         Realm.init(this);
         MultiDex.install(this);
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
+        realmConfig = new RealmConfiguration.Builder()
                 .name("porchlyt_services.realm")
-                .schemaVersion(14)
+                .schemaVersion(15)
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfig);
-
 
 
         TypefaceProvider.registerDefaultIconSets();
@@ -39,12 +40,12 @@ public class app extends MultiDexApplication {
 
 
         //create and insert the appsettings
-        Realm db = Realm.getDefaultInstance();
+        /*Realm db = Realm.getDefaultInstance();
         db.beginTransaction();
         appSettings s = new appSettings();
         db.insertOrUpdate(s);
         db.commitTransaction();
-        db.close();
+        db.close();*/
 
         //show the realm database
         //RealmBrowser.startRealmModelsActivity(this, realmConfig);

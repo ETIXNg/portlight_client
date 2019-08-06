@@ -111,8 +111,13 @@ public class ViewJobActivity extends AppCompatActivity {
 
         if (job.job_status.equals(JobStatus.closed.toString())) {
             Snackbar.make(content_view, getString(R.string.this_job_is_closed), Snackbar.LENGTH_INDEFINITE).show();
-            //btn_card_payment.setVisibility(View.GONE);//hide these two
-            //btn_cash_payment.setVisibility(View.GONE);
+            btn_card_payment.setVisibility(View.GONE);//hide these two
+            btn_cash_payment.setVisibility(View.GONE);
+        }
+
+        if (job.job_status.equals(JobStatus.disputed.toString())) {
+            Snackbar.make(content_view, getString(R.string.this_job_is_under_dispute), Snackbar.LENGTH_INDEFINITE).show();
+            btn_open_dispute.setVisibility(View.GONE);
         }
 
         if (job.job_status.equals(JobStatus.cancelled.toString())) {

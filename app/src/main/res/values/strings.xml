@@ -119,6 +119,7 @@
     </string>
 
     <string name="your_account_is_now_enabled">Your account is now enabled</string>
+    <string name="this_job_is_under_dispute">This job is under dispute</string>
 
 
 </resources>
