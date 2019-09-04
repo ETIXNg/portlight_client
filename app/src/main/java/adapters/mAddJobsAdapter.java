@@ -1,11 +1,6 @@
 package adapters;
 
 import android.app.Activity;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.samaritan.portchlyt_services.R;
+import androidx.cardview.widget.CardView;
+
+import com.sirachlabs.portchlyt_services.R;
 
 import java.util.ArrayList;
 

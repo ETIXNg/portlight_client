@@ -1,11 +1,12 @@
 package models.mArtisan;
 
+import androidx.annotation.Keep;
+import androidx.room.PrimaryKey;
+
 import java.util.UUID;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class Referee extends RealmObject
+@Keep
+public class Referee
 {
     @PrimaryKey
     public String _id = UUID.randomUUID().toString();

@@ -21,12 +21,6 @@
     </style>
 
 
-
-    <style name="MyDialogTheme" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-    </style>
-
     <style name="MyDialogThemeModal" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>

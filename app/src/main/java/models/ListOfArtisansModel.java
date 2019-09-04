@@ -1,5 +1,8 @@
 package models;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class ListOfArtisansModel {
     public String artisan_app_id;
     public String name;

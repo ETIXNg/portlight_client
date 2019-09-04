@@ -1,27 +1,21 @@
 package adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.samaritan.portchlyt_services.R;
-import com.samaritan.portchlyt_services.ViewJobActivity;
-import com.samaritan.portchlyt_services.app;
-
-import org.w3c.dom.Text;
+import com.sirachlabs.portchlyt_services.R;
+import com.sirachlabs.portchlyt_services.app;
 
 import java.util.List;
 
 import globals.globals;
-import io.realm.Realm;
 import models.mJobs.mJobs;
 import models.mJobs.mTask;
 
@@ -30,11 +24,11 @@ public class mTasksAdapter extends RecyclerView.Adapter<mTasksAdapter.myViewHold
 
     mJobs job;
     Context act;
+    List<mTask> tasks;
     public mTasksAdapter(String _job_id)
     {
-        Realm db = globals.getDB();
-        job      = db.copyFromRealm(   db.where(mJobs.class).equalTo("_job_id",_job_id).findFirst()  );
-        db.close();
+        job = app.db.mJobsDao().get_job(_job_id);
+        tasks=app.db.taskDao().get_tasks(_job_id);
         this.act= app.ctx;
     }
 
@@ -51,9 +45,9 @@ public class mTasksAdapter extends RecyclerView.Adapter<mTasksAdapter.myViewHold
 
 
         mTasksAdapter.myViewHolder vh = (mTasksAdapter.myViewHolder) holder;
-        mTask task = job.tasks.get(position);
+        mTask task = tasks.get(position);
         vh.txt_task_description.setText(task.description);
-        vh.txt_task_price.setText( globals.formatCurrency( task.price ) );
+        vh.txt_task_price.setText( globals.formatCurrencyPlain( task.price ) );
 
         //highlight the background
         if(position%2==0)
@@ -70,7 +64,7 @@ public class mTasksAdapter extends RecyclerView.Adapter<mTasksAdapter.myViewHold
 
     @Override
     public int getItemCount() {
-        return job.tasks.size();
+        return tasks.size();
     }
 
     class myViewHolder extends RecyclerView.ViewHolder {

@@ -2,11 +2,9 @@ package adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -15,16 +13,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.beardedhen.androidbootstrap.BootstrapLabel;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.samaritan.portchlyt_services.R;
-import com.samaritan.portchlyt_services.ViewJobActivity;
+import com.sirachlabs.portchlyt_services.R;
+import com.sirachlabs.portchlyt_services.ViewJobActivity;
 
 import java.util.List;
 
 import globals.globals;
-import io.realm.RealmRecyclerViewAdapter;
 import models.mArtisan.mArtisan;
 
 ///adapter for the artisan that have been found and displayed on the home/search screen
@@ -62,7 +57,7 @@ public class foundArtisansAdapter extends RecyclerView.Adapter<foundArtisansAdap
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         mArtisan artisan = artisans.get(position);
         int artisan_rating = artisans_rating.get(position);
-        holder.lbl_artisan_skills.setText(TextUtils.join(" ",artisan.skills));
+        holder.lbl_artisan_skills.setText(artisan.skills_);
         holder.txt_artisan_name.setText(artisan.name);
         holder.txt_artisan_mobile.setText(artisan.mobile);
         holder.ratingBar.setRating(artisan_rating);

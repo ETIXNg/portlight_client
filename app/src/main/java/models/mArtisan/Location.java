@@ -1,20 +1,18 @@
 package models.mArtisan;
 
-import io.realm.RealmList;
-import io.realm.RealmModel;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.RealmClass;
 
-@RealmClass
-public class Location extends RealmObject {
-    public Location (){}
-    public Location(double lat,double lon)
-    {
-        coordinates.add(lat);
-        coordinates.add(lon);
-    }
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
+@Keep
+public class Location  {
     @PrimaryKey
+    @NonNull
     public String type  = "Point";
-    public RealmList<Double> coordinates  = new RealmList<>();//lat long
+    public Double lat;//latitude
+    public Double lng;//longitude
+
 }

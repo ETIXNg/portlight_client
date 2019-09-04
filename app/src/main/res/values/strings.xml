@@ -1,30 +1,14 @@
 <resources>
     <string name="app_name">porchlyt-services</string>
-    <string name="blog">blog</string>
     <string name="search">search</string>
     <string name="jobs">jobs</string>
-    <string name="describe_the_problem_you_want_repaired">Describe the problem you want repaired</string>
-    <string name="location">Location</string>
-    <string name="select_category">Select Category</string>
 
 
-    <string name="click_to_add_job">click to add job</string>
-    <string name="add_job">Add job</string>
-    <string name="search_job">Search job</string>
-    <string name="search_artisan">Search Artisan {fa_search}</string>
-    <string name="address">Address</string>
     <string name="cannot_be_blank">Cannot be blank</string>
     <string name="select_a_job">select a job</string>
-    <string name="add_location">Add Location</string>
-    <string name="click_to_edit_location">click to edit location</string>
-    <string name="ok">ok</string>
     <string name="cancel">cancel</string>
-    <string name="already_selected">already selected</string>
-    <string name="information">Information</string>
     <string name="we_need_your_location_to_provide_you_this_service">We need to know your location to provide you this service</string>
-    <string name="enable_location_settings_to_enhance_your_user_experience">Enable location settings to enhance your user experience</string>
     <string name="click_to_enable_location_services">Your location services are disabled, click to enable...</string>
-    <string name="long_press_to_cancel">Long press to cancel</string>
     <string name="no_jobs_selected">No jobs selected</string>
     <string name="error_occured_try_again">Error occurred try again</string>
     <string name="registration">Registration</string>
@@ -73,7 +57,6 @@
     <string name="did_the_job_well">Did the job well</string>
     <string name="fair_pricing">Fair pricing</string>
     <string name="rate_artisan">Rate artisan</string>
-    <string name="artisan_rating">Artisan rating</string>
     <string name="reason_for_dispute">Reason for dispute</string>
 
     <string name="pricing_too_expensive">Pricing too expensive</string>
@@ -120,6 +103,11 @@
 
     <string name="your_account_is_now_enabled">Your account is now enabled</string>
     <string name="this_job_is_under_dispute">This job is under dispute</string>
+    <string name="already_searching">Already searching</string>
+    <string name="settings">Settings</string>
+    <string name="change_settings">Change Settings</string>
+    <string name="save">Save</string>
+    <string name="mobile_number">Mobile Number</string>
 
 
 </resources>

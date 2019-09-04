@@ -1,26 +1,14 @@
 package adapters;
 
-import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
-import com.samaritan.portchlyt_services.R;
-import com.samaritan.portchlyt_services.app;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.sirachlabs.portchlyt_services.R;
 
 import MainActivityTabs.SearchServicesFragment;
 

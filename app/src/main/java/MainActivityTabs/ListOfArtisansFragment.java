@@ -6,13 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.slidingpanelayout.widget.SlidingPaneLayout;
-
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,20 +18,24 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.slidingpanelayout.widget.SlidingPaneLayout;
+
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
-import com.samaritan.portchlyt_services.R;
+import com.sirachlabs.portchlyt_services.R;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 import adapters.mList_of_Artisans_Adapter;
+import globals.globals;
 import models.ListOfArtisansModel;
-import globals.*;
-import models.mArtisan.mArtisan;
 
 public class ListOfArtisansFragment extends Fragment {
 
@@ -135,7 +132,7 @@ public class ListOfArtisansFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //reset the page to 1 and clear the current list
-                page = 1;
+                page = 0;//go back to page zero and start over
                 artisans_list_data.clear();
                 sliding_panel.closePane();
                 get_more_data();
@@ -152,12 +149,14 @@ public class ListOfArtisansFragment extends Fragment {
                 int totalItemCount = artisans_adapter.getItemCount();
                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 //if (totalItemCount <= (lastVisibleItem + 1))
-                if (!recyclerView.canScrollVertically(1))
+                //if (!recyclerView.canScrollVertically(1))
+                if((totalItemCount)>=lastVisibleItem && recyclerView.canScrollVertically(1))
                 {
                     //dont insert yet another if already loading
                     if (loading) {
                         return;
                     }
+                    page++;
                     get_more_data();
                 }
             }
@@ -251,7 +250,7 @@ public class ListOfArtisansFragment extends Fragment {
                         return;
                     }
 
-                    Log.e(tag, "result: " + result);
+                    Log.e(tag, "result: " + result.getResult());
 
                     try {
                         JSONArray json_a = new JSONArray(result.getResult());
@@ -260,7 +259,6 @@ public class ListOfArtisansFragment extends Fragment {
                             artisans_list_data.add(artisan);//add to data set
                             artisans_adapter.notifyItemInserted(artisans_list_data.size() - 1);
                         }
-                        page++;
                     } catch (Exception ex) {
                         Log.e(tag, "line 148 " + ex.getLocalizedMessage());
                     }

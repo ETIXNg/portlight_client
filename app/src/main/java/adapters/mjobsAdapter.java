@@ -1,16 +1,7 @@
 package adapters;
 
-import io.realm.OrderedRealmCollection;
-import io.realm.Realm;
-import io.realm.RealmModel;
-import io.realm.RealmRecyclerViewAdapter;
-import models.mJobs.JobStatus;
-import models.mJobs.mJobs;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,25 +9,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.beardedhen.androidbootstrap.BootstrapLabel;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.samaritan.portchlyt_services.R;
-import com.samaritan.portchlyt_services.ViewJobActivity;
+import com.sirachlabs.portchlyt_services.R;
+import com.sirachlabs.portchlyt_services.ViewJobActivity;
+import com.sirachlabs.portchlyt_services.app;
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.Collections;
 import java.util.List;
-import globals.*;
+
+import globals.globals;
+import models.mJobs.JobStatus;
+import models.mJobs.mJobs;
 
 
 //this is just an adapter used to display the running jobs that this client has on the job fragment
@@ -46,11 +36,8 @@ public class mjobsAdapter extends RecyclerView.Adapter<mjobsAdapter.myViewHolder
     public Activity act;
 
     public mjobsAdapter(Activity act) {
-        Realm db = globals.getDB();
-        List<mJobs>_jobs = db.where(mJobs.class).findAll();
-        jobs = db.copyFromRealm(_jobs);
+        jobs = app.db.mJobsDao().get_jobs();
         Collections.reverse(jobs);
-        db.close();
         this.act = act;
     }
 
@@ -65,7 +52,8 @@ public class mjobsAdapter extends RecyclerView.Adapter<mjobsAdapter.myViewHolder
 
     @Override
     public int getItemCount() {
-        return jobs.size();
+        if(jobs!=null)return jobs.size();
+        return 0;
     }
 
 

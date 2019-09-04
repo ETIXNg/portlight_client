@@ -7,22 +7,21 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.rtp.RtpStream;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.google.gson.Gson;
-import com.samaritan.portchlyt_services.ArtisanRatingActivity;
-import com.samaritan.portchlyt_services.NoArtisansFoundActivity;
-import com.samaritan.portchlyt_services.NotificationActivity;
-import com.samaritan.portchlyt_services.R;
-import com.samaritan.portchlyt_services.ViewJobActivity;
-import com.samaritan.portchlyt_services.app;
+import com.sirachlabs.portchlyt_services.ArtisanRatingActivity;
+import com.sirachlabs.portchlyt_services.NoArtisansFoundActivity;
+import com.sirachlabs.portchlyt_services.NotificationActivity;
+import com.sirachlabs.portchlyt_services.R;
+import com.sirachlabs.portchlyt_services.ViewJobActivity;
+import com.sirachlabs.portchlyt_services.app;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -30,27 +29,20 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
-
-
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.json.JSONObject;
 
 import MainActivityTabs.JobsFragment;
-import MainActivityTabs.NewsFragment;
 import MainActivityTabs.SearchServicesFragment;
-import io.realm.Realm;
-import io.realm.RealmList;
 import models.appSettings;
 import models.mArtisan.mArtisan;
 import models.mClient;
 import models.mJobs.JobStatus;
 import models.mJobs.mJobs;
 import models.mJobs.mTask;
-import models.mNotification;
 
 
 //todo convert this class to a service so it can run async in the background always
@@ -67,24 +59,23 @@ public class MyMqtt extends Service {
         ctx = context;
 
         //get the correct client id for this specific djaevice
-        Realm db = Realm.getDefaultInstance();
-        mClient client = db.where(mClient.class).findFirst();
-        appSettings aps = db.where(appSettings.class).findFirst();
+        mClient client = app.db.mClientDao().get_client();
+        appSettings aps = app.db.appSettingsDao().get_app_settings();
         clientId = client.app_id;//use this topic for real time comms with the client app
-        db.close();
         mqttClient = new MqttAndroidClient(app.ctx, globals.mqtt_server, clientId);
 
 
         mqttClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
-                subscribeToTopic("general_updates", 0);//subscription for general updates
-                subscribeToTopic(clientId, 0);//this subscription is for the communication between the server and this client use a different topic for those messages wich do not require realtime, since this one requires real time it must subscribe to qos 0
+                subscribeToTopic("general_updates", 1);//subscription for general updates
+                subscribeToTopic(clientId, 1);//this subscription is for the communication between the server and this client use a different topic for those messages wich do not require realtime, since this one requires real time it must subscribe to qos 0
             }
 
             @Override
             public void connectionLost(Throwable throwable) {
                 Log.e(tag, "connection lost: " + throwable.getLocalizedMessage());
+                connect();
             }
 
             @Override
@@ -103,34 +94,20 @@ public class MyMqtt extends Service {
 
                 //route the message to the correct handler
 
-                if(type.equals("enable_client"))
-                {
+                if (type.equals("enable_client")) {
 
-                    Realm db = globals.getDB();
-                    mClient client = db.where(mClient.class).findFirst();//there is only one client per phone
-                    db.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            client.enabled=true;
-                        }
-                    });
-                    db.close();
+                    mClient client = app.db.mClientDao().get_client();
+                    client.enabled = true;
+                    app.db.mClientDao().update_one(client);//update the client enabled
                     create_notification(app.ctx.getString(R.string.your_account_is_now_enabled));
                     SearchServicesFragment.show_hide_enabled();
 
                 }
-                if(type.equals("disable_client"))
-                {
+                if (type.equals("disable_client")) {
 
-                    Realm db = globals.getDB();
-                    mClient client = db.where(mClient.class).findFirst();//there is only one client per phone
-                    db.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            client.enabled=false;
-                        }
-                    });
-                    db.close();
+                    mClient client = app.db.mClientDao().get_client();
+                    client.enabled = false;
+                    app.db.mClientDao().update_one(client);//update cleint disabled
                     create_notification(app.ctx.getString(R.string.your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service));
                     SearchServicesFragment.show_hide_enabled();
 
@@ -138,88 +115,73 @@ public class MyMqtt extends Service {
 
                 if (type.equals("job_cancelled")) {
 
-                    Realm db = globals.getDB();
-                    mJobs job = db.where(mJobs.class).equalTo("_job_id",json.getString("_job_id")).findFirst();
-                    db.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            job.end_time=LocalDateTime.now().toString();
-                            job.job_status= JobStatus.cancelled.toString();
-                        }
-                    });
-                    //remove icon and let the plain icon come up
+                    String _job_id = json.getString("_job_id");
+                    mJobs job = app.db.mJobsDao().get_job(_job_id);
+                    job.end_time = LocalDateTime.now().toString();
+                    job.job_status = JobStatus.cancelled.toString();
+                    //remove icon and let the plain/normal icon come up
                     SearchServicesFragment.remove_selected_artisan_icon(job.artisan_app_id);
-                    db.close();
-
                     //refresh the adapter
                     JobsFragment.refreshJobsAdapter();
-
                     //close the ViewJobActivity if running
-                    try{
+                    try {
                         ViewJobActivity.close_activity();
-                    }catch (Exception ex){}
+                    } catch (Exception ex) {
+                    }
 
 
                     //display a notification for cancelling the job
-                    Intent notification =  new Intent(app.ctx, NotificationActivity.class);
-                    notification.putExtra("message",json.getString("reason_for_cancellation"));
-                    notification.putExtra("title",app.ctx.getString(R.string.job_cancelled));
+                    Intent notification = new Intent(app.ctx, NotificationActivity.class);
+                    notification.putExtra("message", json.getString("reason_for_cancellation"));
+                    notification.putExtra("title", app.ctx.getString(R.string.job_cancelled));
                     notification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     app.ctx.startActivity(notification);
-
-
-
 
 
                 }
 
                 //apdate the artisan icon on the map
-                if(type.equals("artisan_on_map_update"))
-                {
+                if (type.equals("artisan_on_map_update")) {
                     String artisan_app_id = json.getString("artisan_app_id");
                     String artisan_lat = json.getString("artisan_lat");
                     String artisan_lng = json.getString("artisan_lng");
                     String skill = json.getString("skill");
 
-                    SearchServicesFragment.update_artisan_on_map(artisan_app_id,artisan_lat,artisan_lng,skill);
+                    SearchServicesFragment.update_artisan_on_map(artisan_app_id, artisan_lat, artisan_lng, skill);
                 }
 
                 if (type.equals("cash_payment_accepted_by_artisan")) {
                     //close this job
                     try {
                         String _job_id = json.getString("_job_id");
-                        Realm db2 = globals.getDB();
-                        mJobs job = db2.where(mJobs.class).equalTo("_job_id", _job_id).findFirst();
-                        db2.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                if (job.end_time == null)
-                                {
-                                    //make sure we dont change the date again even if new payment if recieved
-                                    job.end_time = LocalDateTime.now().toString();//set the end time
-                                }
-                                job.job_status= JobStatus.closed.toString();
-                                JobsFragment.refreshJobsAdapter();
-                                Intent rating = new Intent(app.ctx, ArtisanRatingActivity.class);
-                                rating.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                rating.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                rating.putExtra("_job_id", _job_id);
-                                app.ctx.startActivity(rating);
-                            }
-                        });
+                        mJobs job = app.db.mJobsDao().get_job(_job_id);
+                        if (job.end_time == null) {
+                            //make sure we dont change the date again even if new payment if recieved
+                            job.end_time = LocalDateTime.now().toString();//set the end time
+                        }
+                        job.job_status = JobStatus.closed.toString();
+                        //update job
+                        app.db.mJobsDao().update_one(job);
+                        JobsFragment.refreshJobsAdapter();
+                        Intent rating = new Intent(app.ctx, ArtisanRatingActivity.class);
+                        rating.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        rating.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        rating.putExtra("_job_id", _job_id);
+                        app.ctx.startActivity(rating);
                         //remove icon and let the plain icon come up
                         SearchServicesFragment.remove_selected_artisan_icon(job.artisan_app_id);
-                        db2.close();
 
                         //close the ViewJobActivity if running
-                        try{
+                        try {
                             ViewJobActivity.close_activity();
-                        }catch (Exception ex){}
+                        } catch (Exception ex) {
+                        }
 
                         create_notification(app.ctx.getString(R.string.payment_recieved));
-                    } catch (Exception ex) {
-                        Log.e(tag,ex.getMessage());
-                        Toast.makeText(app.ctx,ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (
+                            Exception ex) {
+                        Log.e(tag, ex.getMessage());
+                        Toast.makeText(app.ctx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -227,26 +189,19 @@ public class MyMqtt extends Service {
                 if (type.equals("client_job_bill_notification")) {
 
                     try {
-                        String data = json.getString("data");
-                        Realm db = Realm.getDefaultInstance();
-                        mJobs job_from_artisan = new Gson().fromJson(data, mJobs.class);
-                        mJobs job_from_db = db.where(mJobs.class).equalTo("_job_id", job_from_artisan._job_id).findFirst();
-                        db.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                //clear from my list
-                                job_from_db.tasks.clear();
-                                //first delete all the existing ones
-                                for (mTask t : job_from_db.tasks) {
-                                    t.deleteFromRealm();///delete from realm all the old tasks
-                                }
-                                job_from_db.tasks.deleteAllFromRealm();
-                                for (mTask t : job_from_artisan.tasks) {
-                                    job_from_db.tasks.add(t);
-                                }
-                            }
-                        });
-                        db.close();
+
+                        //String json_data = json.getString("data");
+                        //JSONObject jsonObject = new JSONObject(json_data);
+                        String json_tasks = json.getString("tasks");
+                        String _job_id = json.getString("_job_id");
+                        mTask[] tasks = new Gson().fromJson(json_tasks,mTask[].class);
+                        //clear from my current list of tasks to get a new list of jobs
+                        app.db.taskDao().delete_all(_job_id);
+                        //now add the new tasks recieved
+                        for (mTask task : tasks) {
+                            task._job_id=_job_id;
+                            app.db.taskDao().insert_one(task);
+                        }
                         ViewJobActivity.getTheJob();
                         create_notification(app.ctx.getString(R.string.bill_updated));
                     } catch (Exception ex) {
@@ -273,53 +228,41 @@ public class MyMqtt extends Service {
                             String jobs_accepted = json.getString("jobs_accepted");
                             String job_data = json.getString("job_data");
                             mArtisan artisan = new Gson().fromJson(json.getString("artisan_json_data"), mArtisan.class);
-                            int artisan_rating = (int)json.getDouble("artisan_rating");
-                            SearchServicesFragment.DisplayAnArtisanThumbNail(artisan,artisan_rating);//show this thumbnail with the correct jobs
-
-
-
-
+                            artisan.skills_ = TextUtils.join(" ", artisan.skills);//convert the list to a string
+                            int artisan_rating = (int) json.getDouble("artisan_rating");
+                            SearchServicesFragment.DisplayAnArtisanThumbNail(artisan, artisan_rating);//show this thumbnail with the correct jobs
 
 
                             //also save this job to the db since it has been accepted by the artisan
                             //now save this job in the jobs place and open its activity straight away
-                            Realm db = globals.getDB();
-                            db.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    try {
-                                        JSONObject job_json = new JSONObject(job_data);
-                                        mJobs job = new mJobs();
-                                        job.artisan_app_id = job_json.getString("artisan_app_id");
-                                        job._job_id = job_json.getString("_job_id");//set the job id
-                                        job.artisan_mobile = job_json.getString("artisan_mobile");
-                                        job.geoLocationLatitude = job_json.getString("latitude");
-                                        job.geoLocationLongitude = job_json.getString("longitude");
-                                        job.start_time = LocalDateTime.now().toString();
-                                        job.artisan_name = job_json.getString("artisan_name");//add the name of the artisan
-                                        job.description = job_json.getString("requested_skills");//any notes the artian may want to note but initially indicate the skills
+                            try {
+                                JSONObject job_json = new JSONObject(job_data);
+                                mJobs job = new mJobs();
+                                job.artisan_app_id = job_json.getString("artisan_app_id");
+                                job._job_id = job_json.getString("_job_id");//set the job id
+                                job.artisan_mobile = job_json.getString("artisan_mobile");
+                                job.geoLocationLatitude = job_json.getString("latitude");
+                                job.geoLocationLongitude = job_json.getString("longitude");
+                                job.start_time = LocalDateTime.now().toString();
+                                job.artisan_name = job_json.getString("artisan_name");//add the name of the artisan
+                                job.description = job_json.getString("requested_skills");//any notes the artian may want to note but initially indicate the skills
 
 
-                                        //artisans bank detail
-                                        job.account_bank=artisan.account_bank;
-                                        job.account_number=artisan.account_number;
-                                        job.subaccount_id=artisan.subaccount_id;
-                                        job.subaccount_id_id=artisan.subaccount_id_id;
+                                //artisans bank detail
+                                job.account_bank = artisan.account_bank;
+                                job.account_number = artisan.account_number;
+                                job.subaccount_id = artisan.subaccount_id;
+                                job.subaccount_id_id = artisan.subaccount_id_id;
 
 
-
-
-                                        db.insert(job);//save this request
-                                        JobsFragment.refreshJobsAdapter();//display the job item in the jobs fragment
-                                    } catch (Exception ex) {
-                                        Log.e(tag, "line 272 "+ ex.getMessage());
-                                    }
-                                }
-                            });
-                            db.close();
-                            //refresh the adapter
-                            JobsFragment.refreshJobsAdapter();
+                                app.db.mJobsDao().insert_one(job);//save this job
+                                JobsFragment.refreshJobsAdapter();//display the job item in the jobs fragment
+                            } catch (Exception ex) {
+                                Log.e(tag, "line 272 " + ex.getMessage());
+                            }
                         }
+                        //refresh the adapter
+                        JobsFragment.refreshJobsAdapter();
 
 
                     } catch (Exception ex) {
@@ -335,7 +278,9 @@ public class MyMqtt extends Service {
                 //Log.e(tag, "message delivered");
             }
         });
+
         connect();//attempt to connect as soon as its created
+
     }
 
 
@@ -343,7 +288,7 @@ public class MyMqtt extends Service {
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
-        mqttConnectOptions.setMaxInflight(10);
+        //mqttConnectOptions.setMaxInflight(100);
 
         try {
             mqttClient.connect(mqttConnectOptions, app.ctx, new IMqttActionListener() {
@@ -466,19 +411,14 @@ public class MyMqtt extends Service {
     }
 
 
-
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log.e(tag,"mqtt_service started");
+        Log.e(tag, "mqtt_service started");
 
-        if(MyMqtt.mqttClient==null)
-        {//only if client is not already there then re-init
+        if (MyMqtt.mqttClient == null) {//only if client is not already there then re-init
             MyMqtt.init_(this);
-        }
-        else if(!MyMqtt.mqttClient.isConnected())
-        {//if not connected attempt to connect
+        } else if (!MyMqtt.mqttClient.isConnected()) {//if not connected attempt to connect
             connect();
         }
 
@@ -488,7 +428,7 @@ public class MyMqtt extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e(tag,"mqtt_service stopped");
+        Log.e(tag, "mqtt_service stopped");
     }
 
 
@@ -497,9 +437,6 @@ public class MyMqtt extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-
-
 
 
 }

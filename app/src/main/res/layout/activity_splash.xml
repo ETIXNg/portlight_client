@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_splash"
+    android:background="#fff"
     tools:context=".SplashActivity">
 
 
@@ -21,10 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:text="@string/register"
-            app:bootstrapBrand="secondary"
+            app:bootstrapBrand="danger"
             app:roundedCorners="true"
             android:onClick="Register"
-            app:showOutline="false" />
+            app:showOutline="true" />
 
 
     </LinearLayout>
@@ -42,11 +42,10 @@
         android:shadowDy="1"
         android:shadowRadius="1"
         android:text="porchlyt"
-        android:textColor="#fff"
+        android:textColor="#dedede"
         android:textSize="48dp" />
 
     <TextView
-        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView3"
@@ -72,7 +71,6 @@
         android:layout_margin="5dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:id="@+id/textView5"
         android:textSize="11dp"
         android:textColor="#fff"
         android:layout_width="wrap_content"

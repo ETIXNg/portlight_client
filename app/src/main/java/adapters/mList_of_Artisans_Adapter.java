@@ -10,13 +10,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
-import com.samaritan.portchlyt_services.R;
-import com.samaritan.portchlyt_services.app;
+import com.sirachlabs.portchlyt_services.R;
+import com.sirachlabs.portchlyt_services.app;
 
 import java.util.List;
 

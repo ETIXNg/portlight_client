@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,12 +16,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +28,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -52,7 +52,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.koushikdutta.ion.Ion;
-import com.samaritan.portchlyt_services.R;
+import com.sirachlabs.portchlyt_services.R;
+import com.sirachlabs.portchlyt_services.SettingsActivity;
+import com.sirachlabs.portchlyt_services.app;
 import com.skyfishjy.library.RippleBackground;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -68,7 +70,6 @@ import java.util.UUID;
 import adapters.foundArtisansAdapter;
 import adapters.skillsAdapter;
 import globals.globals;
-import io.realm.Realm;
 import models.appSettings;
 import models.mArtisan.mArtisan;
 import models.mClient;
@@ -87,6 +88,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     static LinearLayout rel_enabled;
     static RelativeLayout topView;
     RelativeLayout rel_cancel_request;
+    LinearLayout settings_layout;
     //
     static Context ctx;
     public static MediaPlayer mp;
@@ -110,6 +112,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     static Activity activity_context;
 
+    boolean is_searching;//is searching or not
+
 
     static View view;
     //location
@@ -120,7 +124,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     public static boolean useNewLocation;//set to true if the user chooses to use a different location
     public static boolean LocationEnabled;//is the location enabled yes/no
 
-    static SlidingUpPanelLayout sliding_layout;
+    public static SlidingUpPanelLayout sliding_layout;
 
     static String tag = "SearchServicesFragment";
 
@@ -164,6 +168,16 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         //
         rel_results = (LinearLayout) view.findViewById(R.id.rel_results);
         rel_enabled = (LinearLayout) view.findViewById(R.id.rel_enabled);
+        settings_layout = (LinearLayout) view.findViewById(R.id.settings_layout);
+
+        settings_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent settings  = new Intent(getActivity(), SettingsActivity.class);
+                getActivity().startActivity(settings);
+            }
+        });
+
         rel_results.setVisibility(View.GONE);//initially nt visible
         relLay1 = (RelativeLayout) view.findViewById(R.id.relLay1);
         relLay2 = (RelativeLayout) view.findViewById(R.id.relLay2);
@@ -284,6 +298,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             public void onClick(View view) {
                 SearchIsCompleted();//closed the media player and also the ripple bg
                 rel_results.setVisibility(View.GONE);
+                is_searching = false;
                 rel_cancel_request.setVisibility(View.GONE);
             }
         });
@@ -315,12 +330,17 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     //function to do the web service call to search for the artisan
     public void execSearchForAtisan() {
 
-        if(!globals.is_client_enabled())
-        {
+        if (is_searching) {
+            Toast.makeText(getActivity(), getString(R.string.already_searching), Toast.LENGTH_SHORT).show();
+            return;//dont search again since already searching
+        }
+
+        if (!globals.is_client_enabled()) {
             Toast.makeText(
                     activity_context
-                    ,activity_context.getString(R.string.your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service)
-                    ,Toast.LENGTH_LONG).show();
+                    , activity_context.getString(R.string.your_temporarily_banned_from_using_this_service_as_you_may_have_violated_our_terms_of_service)
+                    , Toast.LENGTH_LONG).show();
+
             return;
         }
 
@@ -351,9 +371,9 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             }
             String sdata = "";
             try {
-                Realm db = globals.getDB();
-                mClient client = db.where(mClient.class).findFirst();//there is only one client per phone
-                appSettings aps = db.where(appSettings.class).findFirst();
+
+                mClient client = app.db.mClientDao().get_client();
+                appSettings aps = app.db.appSettingsDao().get_app_settings();
                 JSONObject json = new JSONObject();
                 json.put("lat", wayLatitude);
                 json.put("lon", wayLongitude);
@@ -361,7 +381,6 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                 json.put("app_id", client.app_id);
                 json.put("services", ja.toString());
                 sdata = json.toString();
-                db.close();
 
                 //
                 rippleBackground.startRippleAnimation();
@@ -374,12 +393,14 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
                 rel_cancel_request.setVisibility(View.VISIBLE);
                 //
+                is_searching = true;
                 Ion.with(ctx)
                         .load(globals.base_url + "/findServiceArtisan")
                         .setBodyParameter("data", sdata)
                         .asString()
                         .withResponse()
                         .setCallback((e, result) -> {
+
                             if (e != null)//there was an error
                             {
                                 mp.stop();//stop the media player
@@ -395,6 +416,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                 rippleBackground.stopRippleAnimation();
                 Log.e(tag, "line 335 " + ex.getMessage());
                 Snackbar.make(topView, ctx.getString(R.string.error_occured), Snackbar.LENGTH_LONG).show();
+                is_searching = false;
             }
 
         }//else
@@ -619,7 +641,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
             //add a new marker with the new icon
             marker = googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(marker.getPosition().latitude, marker.getPosition().longitude))
-                    .title(TextUtils.join(" ", artisan.skills))
+                    .title(artisan.skills_)
                     //.snippet(skill)
                     .rotation((float) 3.5)
                     .icon(bitmapDescriptorFromVector(activity_context, R.drawable.ic_map_worker_icon_selected)));
@@ -685,8 +707,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     //show or hide the enabled
     public static void show_hide_enabled() {
-        Realm db = globals.getDB();
-        mClient client = db.where(mClient.class).findFirst();//there is only one client per phone
+        mClient client = app.db.mClientDao().get_client();
         if (!client.enabled) {
             rel_enabled.setVisibility(View.VISIBLE);
             MediaPlayer mp = MediaPlayer.create(activity_context, R.raw.plucky);
@@ -694,7 +715,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         } else {
             rel_enabled.setVisibility(View.GONE);
         }
-        db.close();
     }
+
 
 }//fragment

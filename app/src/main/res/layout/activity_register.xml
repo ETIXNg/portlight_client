@@ -54,7 +54,6 @@
         </LinearLayout>
 
         <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:onClick="Register"

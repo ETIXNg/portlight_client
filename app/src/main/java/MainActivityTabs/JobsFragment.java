@@ -4,23 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.samaritan.portchlyt_services.R;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import com.sirachlabs.portchlyt_services.R;
 
 import adapters.mjobsAdapter;
-import io.realm.OrderedRealmCollection;
-import io.realm.Realm;
-import io.realm.Sort;
-import models.mJobs.mJobs;
 
 public class JobsFragment extends Fragment {
 
@@ -78,18 +72,10 @@ public class JobsFragment extends Fragment {
 
     //refresh the jobs adapter to reflect any changes
     public static void refreshJobsAdapter() {
-        Realm db=Realm.getDefaultInstance();
-        try {
             mjobsAdapter jad = new mjobsAdapter(ctx);
             lst_jobs.setLayoutManager(new LinearLayoutManager(ctx));
             lst_jobs.setAdapter(jad);
             jad.notifyDataSetChanged();
-        } catch (Exception e) {
-            Log.e(tag, e.getLocalizedMessage());
-        }
-        finally {
-            db.close();
-        }
     }
 
 

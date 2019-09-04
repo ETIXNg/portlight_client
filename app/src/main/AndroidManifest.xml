@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.samaritan.portchlyt_services">
+    package="com.sirachlabs.portchlyt_services">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -27,9 +27,10 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         android:windowSoftInputMode="stateHidden">
+        <activity android:name=".SettingsActivity"></activity>
         <activity
             android:name=".NotificationActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CancelJobActivity"
             android:screenOrientation="portrait" />
@@ -59,11 +60,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCkHDfN-tHxIsL7WB6EAcd4m4F9KPtzP9E" />
-
         <meta-data
             android:name="co.paystack.android.PublicKey"
             android:value="pk_test_de0b7a459ac00317bb9dc88a8c87b33592873b84" />
-
 
         <uses-library
             android:name="com.google.android.maps"
@@ -94,11 +93,9 @@
             android:screenOrientation="portrait" />
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
-
         <service
             android:name="globals.MyMqtt"
-            android:exported="false" />
-
+            android:exported="true" />
     </application>
 
 </manifest>

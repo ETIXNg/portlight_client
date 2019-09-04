@@ -1,16 +1,25 @@
 package models;
 
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.util.UUID;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+@Entity
+@Keep
+public class mClient {
 
-public class mClient extends RealmObject {
-    @PrimaryKey
-    public String _id = UUID.randomUUID().toString();
+    public String _id= UUID.randomUUID().toString();
     public String name;
     public String surname;
+    @PrimaryKey
+    @NonNull
     public String mobile;
+    public String mobile_country_code = "";
     public String email;
     public String physical_address;
     public String otp;
