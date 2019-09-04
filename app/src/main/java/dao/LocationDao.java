@@ -6,33 +6,36 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import models.mArtisan.Location;
+import models.mArtisan.mLocation;
 
 
 @Dao
 public interface LocationDao {
 
     @Insert
-    public void insert_one(Location item);
+    public void insert_one(mLocation item);
 
     @Insert
-    public void insert_many(Location... item);
+    public void insert_many(mLocation... item);
 
     @Update
-    public void update_one(Location item);
+    public void update_one(mLocation item);
 
     @Update
-    public void update_many(Location... item);
+    public void update_many(mLocation... item);
 
 
     @Delete
-    public void delete_one(Location item);
+    public void delete_one(mLocation item);
+
+    @Query("Delete from mLocation")
+    public void delete_all();
 
     @Delete
-    public void delete_many(Location... item);
+    public void delete_many(mLocation... item);
 
-    @Query("select * from Location")
-    public Location get_location();
+    @Query("select * from mLocation")
+    public mLocation get_location();
 
 
 }

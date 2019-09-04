@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import globals.globals;
 import models.appSettings;
+import models.mArtisan.mLocation;
 import models.mClient;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -65,10 +66,17 @@ public class RegisterActivity extends AppCompatActivity {
         //clear previous data
         app.db.clearAllTables();
 
+        //seed any db item here
 
         //create and insert appSettings
         appSettings aps = new appSettings();
         app.db.appSettingsDao().insert(aps);
+
+        //create and insert the location table
+        mLocation loc = new mLocation();
+        loc.last_known_location=getString(R.string.we_need_your_location_to_provide_you_this_service);
+        app.db.LocationDao().insert_one(loc);
+
 
 
         String mobile = txt_mobile.getText().toString();

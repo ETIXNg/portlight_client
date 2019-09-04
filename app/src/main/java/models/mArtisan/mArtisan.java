@@ -42,7 +42,7 @@ public class mArtisan {
     public boolean registered;
     public boolean busy;//is this artisan currently busy or not, you do not get another work untill you finish your current work
     public boolean on_duty;//am i working or am i on leave? on duty
-    //public Location location = new Location(0.0,0.0);
+    //public mLocation location = new mLocation(0.0,0.0);
     public boolean synced;
     public String app_id;//the app id of this artisan
     public String account_bank;

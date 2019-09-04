@@ -8,11 +8,12 @@ import androidx.room.PrimaryKey;
 
 @Entity
 @Keep
-public class Location  {
+public class mLocation {
     @PrimaryKey
     @NonNull
     public String type  = "Point";
     public Double lat;//latitude
     public Double lng;//longitude
+    public String last_known_location="";
 
 }

@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import globals.globals;
 import models.mClient;
 
+
+//this is not in use since we are not changing the mobile number
 public class SettingsActivity extends AppCompatActivity {
 
     String tag="SettingsActivity";
@@ -50,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
         ccp = (CountryCodePicker) findViewById(R.id.ccp);
         txt_mobile = (BootstrapEditText) findViewById(R.id.txt_mobile);
         context_layout = (LinearLayout) findViewById(R.id.context_layout);
+        mtoolbar = (Toolbar) findViewById(R.id.mtoolbar);
 
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

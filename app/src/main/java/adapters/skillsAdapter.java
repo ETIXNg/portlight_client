@@ -1,5 +1,6 @@
 package adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,6 @@ public class skillsAdapter extends BaseAdapter {
         //
         LinearLayout linlay = (LinearLayout) v.findViewById(R.id.linlay);
         final String skill = skills[position];
-        //
-        TextView txt_skill = (TextView) v.findViewById(R.id.txt_skill);
-        txt_skill.setText(skill);
 
 
         //
@@ -101,26 +99,22 @@ public class skillsAdapter extends BaseAdapter {
 */
 
         final CheckBox chk_skill = (CheckBox) v.findViewById(R.id.chk_skill);
+        chk_skill.setText(skill);
 
         //
         if (SearchServicesFragment.jobsList.contains(skill)) {
             chk_skill.setChecked(true);//set checked to be true if this skill is already selected bcoz it is contined already
         }
 
-        linlay.setOnClickListener(new View.OnClickListener() {
+        chk_skill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //either add the skill of remove the skill
-                chk_skill.performClick();
-
                 if (chk_skill.isChecked()) {
-                    //add skill otherwise
-                    //chk_skill.setChecked(true);
                     SearchServicesFragment.jobsList.add(skill);
                 } else {
-                    //chk_skill.setChecked(false);
                     SearchServicesFragment.jobsList.remove(skill);
                 }
+                Log.e("list",SearchServicesFragment.jobsList.toString());
             }
         });
 

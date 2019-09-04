@@ -11,21 +11,21 @@ import dao.mJobsDao;
 import dao.mNotificationDao;
 import dao.mTaskDao;
 import models.appSettings;
-import models.mArtisan.Location;
+import models.mArtisan.mLocation;
 import models.mArtisan.mArtisan;
 import models.mClient;
 import models.mJobs.mJobs;
 import models.mJobs.mTask;
 import models.mNotification;
 
-@Database(version = 8, entities = {
+@Database(version = 11, entities = {
         mTask.class,
         mNotification.class,
         mClient.class,
         mArtisan.class,
         mJobs.class,
         appSettings.class,
-        Location.class
+        mLocation.class
         })
 
 public abstract class AppDatabase extends RoomDatabase {
