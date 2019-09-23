@@ -77,7 +77,7 @@ public class NoArtisansFoundActivity extends AppCompatActivity {
         }
 
         ProgressDialog pd = new ProgressDialog(NoArtisansFoundActivity.this);
-        pd.setCanceledOnTouchOutside(false);
+        //pd.setCanceledOnTouchOutside(false);
         pd.setMessage(getString(R.string.please_wait));
         pd.show();
 
@@ -85,20 +85,9 @@ public class NoArtisansFoundActivity extends AppCompatActivity {
                 .load(globals.base_url+"/NoArtisanFoundActionClientToTake")
                 .setBodyParameter("data", sdata)
                 .asString()
-                .setCallback(new FutureCallback<String>() {
-                    @Override
-                    public void onCompleted(Exception e, String result) {
+                .setCallback((e, result) -> {
                         pd.dismiss();
-                        if(e==null)
-                        {
-                            Toast.makeText(NoArtisansFoundActivity.this,getString(R.string.saved),Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                        else
-                        {
-                            Toast.makeText(NoArtisansFoundActivity.this,getString(R.string.error_occured),Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                        finish();
                 });
 
 

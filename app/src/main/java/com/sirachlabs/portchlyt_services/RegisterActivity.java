@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.koushikdutta.ion.Response;
 import com.rilixtech.CountryCodePicker;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import globals.globals;
 import models.appSettings;
@@ -29,8 +31,7 @@ import models.mClient;
 
 public class RegisterActivity extends AppCompatActivity {
     ProgressDialog pd;
-    BootstrapEditText txt_mobile;
-    CountryCodePicker ccp;
+    EditText txt_mobile;
     Toolbar mtoolbar;
 
 
@@ -38,8 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        ccp = (CountryCodePicker) findViewById(R.id.ccp);
-        txt_mobile = (BootstrapEditText) findViewById(R.id.txt_mobile);
+        txt_mobile = (EditText) findViewById(R.id.txt_mobile);
         pd = new ProgressDialog(this);
         mtoolbar = (Toolbar) findViewById(R.id.mtoolbar);
 
@@ -74,9 +74,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         //create and insert the location table
         mLocation loc = new mLocation();
-        loc.last_known_location=getString(R.string.we_need_your_location_to_provide_you_this_service);
+        loc.last_known_location = getString(R.string.we_need_your_location_to_provide_you_this_service);
         app.db.LocationDao().insert_one(loc);
-
 
 
         String mobile = txt_mobile.getText().toString();
@@ -86,9 +85,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         mClient client = new mClient();
-        client.mobile = ccp.getSelectedCountryCodeWithPlus() + mobile;
+        client.mobile = mobile;
         client.app_id = aps.app_id;
-
         app.db.mClientDao().insert_one(client);
 
         String sdata = "";//data of the artisan to be posted
@@ -105,14 +103,13 @@ public class RegisterActivity extends AppCompatActivity {
                     .load(globals.base_url + "/clientRegistration")
                     .setBodyParameter("data", sdata)//add the client as a parameter
                     .asString()
-                    .withResponse()
-                    .setCallback(new FutureCallback<Response<String>>() {
-                        @Override
-                        public void onCompleted(Exception e, Response<String> result) {
-                            Log.e("r", result.getResult() + " result");
-                            Log.e("r", e + " error");
+                    .setCallback((e, result) -> {
                             pd.hide();
-                            if (e == null) {
+                            if(e!=null){
+                                Toast.makeText(RegisterActivity.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            if(result==null)return;
                                 try {
                                     if (result == null) return;//return if the result is null
                                     String res = "";
@@ -120,32 +117,38 @@ public class RegisterActivity extends AppCompatActivity {
                                     String otp = "";
                                     String app_id = "";
                                     try {
-                                        res = new JSONObject(result.getResult()).getString("res");
+                                        res = new JSONObject(result).getString("res");
                                     } catch (Exception ex) {
                                     }
                                     try {
-                                        msg = new JSONObject(result.getResult()).getString("msg");
+                                        msg = new JSONObject(result).getString("msg");
                                     } catch (Exception ex) {
                                     }
                                     try {
-                                        otp = new JSONObject(result.getResult()).getString("otp");
+                                        otp = new JSONObject(result).getString("otp");
                                     } catch (Exception ex) {
+
                                     }
                                     try {
-                                        app_id = new JSONObject(result.getResult()).getString("app_id");
+                                        app_id = new JSONObject(result).getString("app_id");
                                     } catch (Exception ex) {
+
                                     }
 
                                     if (res.equals("ok")) {
-                                        // to the next activity to confirm the otp pin
                                         client.otp = otp;
-                                        if (!TextUtils.isEmpty(app_id)) {//maintain the app id since this number if coming back
-                                            client.app_id = app_id;
+                                        if(!TextUtils.isEmpty(app_id)) {//it may be null if the client is a new one
+                                            client.app_id = app_id;//maintain the old app id
                                         }
+                                        client.registered=true;
                                         //update the client
-                                        client.otp=otp;
                                         app.db.mClientDao().update_one(client);
-                                        startActivity(new Intent(RegisterActivity.this, ConfirmOTPActivity.class));
+                                        Intent main = new Intent(RegisterActivity.this, MainActivity.class);
+                                        main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                        main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(main);
                                     } else {
                                         //show the err measage
                                         Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
@@ -155,13 +158,10 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(RegisterActivity.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
                                     Log.d("d", ex.getMessage() + " line 161");
                                 }
-                            } else {
-                                Toast.makeText(RegisterActivity.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
-                            }
-                        }
                     });
         } catch (Exception ex) {
             Log.e("d", ex.getMessage());
+            Toast.makeText(RegisterActivity.this, "line 163 "+ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

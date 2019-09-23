@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="20dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/txt_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:hint="Change mobile"
+            android:inputType="phone"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        app:roundedCorners="true"
+        android:id="@+id/btn_save_mobile"
+        app:bootstrapBrand="danger"
+        app:showOutline="true"
+        android:text="save"
+        android:layout_width="match_parent"
+        android:layout_height="57dp" />
+
+</LinearLayout>

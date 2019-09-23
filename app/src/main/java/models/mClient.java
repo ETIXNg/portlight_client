@@ -13,11 +13,12 @@ import java.util.UUID;
 @Keep
 public class mClient {
 
+    @PrimaryKey
+    @NonNull
     public String _id= UUID.randomUUID().toString();
     public String name;
     public String surname;
-    @PrimaryKey
-    @NonNull
+
     public String mobile;
     public String mobile_country_code = "";
     public String email;

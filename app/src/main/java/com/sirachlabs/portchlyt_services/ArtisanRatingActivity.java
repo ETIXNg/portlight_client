@@ -18,6 +18,7 @@ import com.koushikdutta.ion.Ion;
 import org.joda.time.LocalDateTime;
 import org.json.JSONObject;
 
+import MainActivityTabs.SearchServicesFragment;
 import globals.globals;
 import models.mJobs.JobStatus;
 import models.mJobs.mJobs;
@@ -191,6 +192,7 @@ public class ArtisanRatingActivity extends AppCompatActivity {
                                 String msg = json.getString("msg");
                                 if (res.equals("ok")) {
                                     Toast.makeText(ArtisanRatingActivity.this, getString(R.string.thank_you_for_your_feedback), Toast.LENGTH_SHORT).show();
+                                    SearchServicesFragment.rel_cancel_request.callOnClick();//clears the search so it can start again
                                     finish();
                                 } else {
                                     Log.e(tag, msg);

@@ -40,5 +40,8 @@ public interface mJobsDao {
     @Query("select * from mJobs")
     public List<mJobs> get_jobs();
 
+    @Query("select * from mJobs where artisan_app_id=:artisan_app_id and job_status='opened'")
+    public mJobs get_job_with_artisan(String artisan_app_id);
+
 
 }

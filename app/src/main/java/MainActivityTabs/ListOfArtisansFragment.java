@@ -228,7 +228,6 @@ public class ListOfArtisansFragment extends Fragment {
                 .setBodyParameter("skill", skill + "")
                 .setBodyParameter("per_page", per_page + "")
                 .asString()
-                .withResponse()
                 .setCallback((e, result) -> {
 
                     //delay dismissing the progress bar for a second
@@ -245,15 +244,15 @@ public class ListOfArtisansFragment extends Fragment {
                         return;
                     }
 
-                    if (result == null) {
+                    if (result.equals(null)) {
                         Log.e(tag, "result is null");
                         return;
                     }
 
-                    Log.e(tag, "result: " + result.getResult());
+                    Log.e(tag, "result: " + result);
 
                     try {
-                        JSONArray json_a = new JSONArray(result.getResult());
+                        JSONArray json_a = new JSONArray(result);
                         for (int i = 0; i < json_a.length(); i++) {
                             ListOfArtisansModel artisan = new Gson().fromJson(json_a.get(i).toString(), ListOfArtisansModel.class);
                             artisans_list_data.add(artisan);//add to data set

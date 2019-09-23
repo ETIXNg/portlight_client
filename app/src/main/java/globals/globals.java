@@ -19,9 +19,9 @@ public class globals {
     //public static String rave_flutter_wave_encryption_key="08f060ffbbecd3c6642cb789";
 
 
-    //online se ttings
+    //online settings
     final static String mqtt_server = "tcp://18.222.225.98:1883";
-    public static String base_url="http://18.222.225.98:89/apiService";
+    public static String base_url="http://18.222.225.98:1111/apiService";
 
     //offline settings
 //    final static String mqtt_server = "tcp://192.168.4.1:1883";

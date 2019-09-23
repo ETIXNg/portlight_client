@@ -18,7 +18,7 @@ import models.mJobs.mJobs;
 import models.mJobs.mTask;
 import models.mNotification;
 
-@Database(version = 11, entities = {
+@Database(version = 14, entities = {
         mTask.class,
         mNotification.class,
         mClient.class,

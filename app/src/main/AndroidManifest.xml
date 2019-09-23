@@ -56,6 +56,8 @@
         <activity
             android:name=".ViewJobActivity"
             android:screenOrientation="portrait" />
+        
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -74,7 +76,9 @@
             android:theme="@style/MyDialogThemeModal" />
         <activity
             android:name=".RegisterActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+        </activity>
         <activity
             android:name=".ConfirmOTPActivity"
             android:screenOrientation="portrait" />

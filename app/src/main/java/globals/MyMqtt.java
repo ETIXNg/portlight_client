@@ -121,6 +121,7 @@ public class MyMqtt extends Service {
                     job.job_status = JobStatus.cancelled.toString();
                     //remove icon and let the plain/normal icon come up
                     SearchServicesFragment.remove_selected_artisan_icon(job.artisan_app_id);
+                    SearchServicesFragment.SearchIsCompleted();
                     //refresh the adapter
                     JobsFragment.refreshJobsAdapter();
                     //close the ViewJobActivity if running

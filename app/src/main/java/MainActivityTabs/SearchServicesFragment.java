@@ -3,6 +3,7 @@ package MainActivityTabs;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,17 +24,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -88,7 +92,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
     static RelativeLayout relLay1, relLay2;
     static LinearLayout rel_enabled;
     static RelativeLayout topView;
-    RelativeLayout rel_cancel_request;
+    public  static RelativeLayout rel_cancel_request;
+    LinearLayout lin_mobile;
     //
     static Context ctx;
     public static MediaPlayer mp;
@@ -126,6 +131,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
     //Button
     Button btn_find_now;
+    TextView txt_mobile;
 
     Looper _looper;
 
@@ -156,14 +162,34 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         //
         view = inflater.inflate(R.layout.fragment_search_services, container, false);
         topView = (RelativeLayout) view.findViewById(R.id.topView);
+        lin_mobile = (LinearLayout) view.findViewById(R.id.lin_mobile);
+        txt_mobile = (TextView) view.findViewById(R.id.txt_mobile);
         rel_cancel_request = (RelativeLayout) view.findViewById(R.id.rel_cancel_request);
         rel_cancel_request.setVisibility(View.GONE);
         sliding_layout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
 
+
+        //set client mobile
+        mClient client = app.db.mClientDao().get_client();
+        txt_mobile.setText(client.mobile);
+
+        txt_mobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                show_edit_mobile();
+            }
+        });
+        lin_mobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                show_edit_mobile();
+            }
+        });
+
+
         //
         rel_results = (LinearLayout) view.findViewById(R.id.rel_results);
         rel_enabled = (LinearLayout) view.findViewById(R.id.rel_enabled);
-
 
 
         rel_results.setVisibility(View.GONE);//initially nt visible
@@ -200,26 +226,17 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();//display map imediatly
 
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+            }
+        });
 
         //
         rippleBackground = (RippleBackground) view.findViewById(R.id.rippleBG);
         txt_location = (TextView) view.findViewById(R.id.txt_location);
 
-
-        //
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                // For dropping a marker at a point on the Map
-                //LatLng sydney = new LatLng(-34, 151);
-                //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
-                //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        });
 
         //
         try {
@@ -241,8 +258,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
 
         //set the last known location if it is there
-        mLocation loc=app.db.LocationDao().get_location();
-        if(loc!=null) {
+        mLocation loc = app.db.LocationDao().get_location();
+        if (loc != null) {
             txt_location.setText(loc.last_known_location);//set the address
         }
 
@@ -339,9 +356,9 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         }
 
 
-        mLocation loc =app.db.LocationDao().get_location();
+        mLocation loc = app.db.LocationDao().get_location();
         //dont search unles you have the coordinates
-        if (loc==null||loc.lng == 0) {
+        if (loc == null || loc.lng == 0) {
             Snackbar.make(topView, ctx.getString(R.string.enable_location_settings_first), Snackbar.LENGTH_SHORT).show();
             relLay2.setVisibility(View.VISIBLE);
             topView.invalidate();
@@ -452,6 +469,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         rippleBackground.stopRippleAnimation();//stop the animation
         //clear the jobs list
         jobsList.clear();
+        rel_cancel_request.setVisibility(View.GONE);
         //clear all the jobs check list to get ready for the next search
         clear_all_selected_jobs();
     }
@@ -480,6 +498,8 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
 
         update_artisan_on_map_change_icon_to_selected(artisan);//display the selected artisan
         rippleBackground.stopRippleAnimation();//stop at the first artisan found
+
+        rel_cancel_request.setVisibility(View.GONE);
 
     }
 
@@ -527,18 +547,18 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                     String country = addresses.get(0).getCountryName();
                     String postalCode = addresses.get(0).getPostalCode();
                     String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-                    if (city.equals(null)) city = "";
-                    if (state.equals(null)) state = "";
-                    if (country.equals(null)) country = "";
-                    if (knownName.equals(null))
+                    if (TextUtils.isEmpty(city)) city = "";
+                    if (TextUtils.isEmpty(state)) state = "";
+                    if (TextUtils.isEmpty(country)) country = "";
+                    if (TextUtils.isEmpty(knownName))
                         knownName = "";//this to ensure that we dont pull null values in the address
                     my_address = country + ", " + city + ", " + state + ", " + knownName;
-                    if (my_address.equals("") || my_address.equals(" ") || TextUtils.isEmpty(my_address))
+                    if (TextUtils.isEmpty(my_address))
                         my_address = getString(R.string.unknown_location);
 
                     //update the last known location
-                    mLocation loc= app.db.LocationDao().get_location();
-                    loc.last_known_location= my_address;
+                    mLocation loc = app.db.LocationDao().get_location();
+                    loc.last_known_location = my_address;
                     app.db.LocationDao().update_one(loc);
 
                 } catch (Exception ex) {
@@ -554,7 +574,7 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                         public void run() {
 
                             try {
-                                mLocation loc= app.db.LocationDao().get_location();
+                                mLocation loc = app.db.LocationDao().get_location();
                                 txt_location.setText(loc.last_known_location);//set the address
                             } catch (Exception ex) {
                                 Log.e(tag, "line 521 " + ex.getMessage());
@@ -587,9 +607,9 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
                     if (location != null) {
 
                         //save the this location as the last known location
-                        mLocation loc = new mLocation();
-                        loc.lat=location.getLatitude();
-                        loc.lng=location.getLongitude();
+                        mLocation loc = app.db.LocationDao().get_location();
+                        loc.lat = location.getLatitude();
+                        loc.lng = location.getLongitude();
                         app.db.LocationDao().update_one(loc);
                         //
                         set_address(loc.lat, loc.lng);
@@ -724,5 +744,77 @@ public class SearchServicesFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
+    //show the dialog
+    void show_edit_mobile() {
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(getActivity()).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.client_change_mobile_number_dialog, null);
+
+        final EditText txt_mobile = (EditText) dialogView.findViewById(R.id.txt_mobile);
+        BootstrapButton btn_save = (BootstrapButton) dialogView.findViewById(R.id.btn_save_mobile);
+
+        mClient client= app.db.mClientDao().get_client();
+        txt_mobile.setText(client.mobile);
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String mobile = txt_mobile.getText().toString();
+                if (TextUtils.isEmpty(mobile)) {
+                    txt_mobile.setError("Cannot be blank");
+                    return;
+                }
+                save_mobile(mobile,dialogBuilder);
+            }
+        });
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+    }
+
+    //push to server and save mobile
+    void save_mobile(String mobile,AlertDialog dlg) {
+
+        ProgressDialog pd = new ProgressDialog(getActivity());
+        pd.setCanceledOnTouchOutside(false);
+        pd.setMessage(getString(R.string.please_wait));
+        pd.show();
+
+        mClient client = app.db.mClientDao().get_client();
+        Ion.with(getActivity())
+                .load(globals.base_url + "/client_change_mobile")
+                .setBodyParameter("mobile", mobile)
+                .setBodyParameter("client_app_id", client.app_id)
+                .asString()
+                .setCallback((e, result) -> {
+                    pd.hide();
+                    dlg.hide();
+
+                    if (e != null) {
+                        Log.e(tag, "line 776 " + e.getMessage());
+                        Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Log.e(tag, "result: " + result);
+                    try {
+                        JSONObject json = new JSONObject(result);
+                        String res = json.getString("res");
+                        if (res.equals("ok")) {
+                            client.mobile = mobile;
+                            app.db.mClientDao().update_one(client);
+                            txt_mobile.setText(mobile);
+
+                        }
+                        else{
+                            Log.e(tag, "line 806 "+res);
+                            Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                    } catch (Exception ex) {
+                        Log.e(tag, "line 783 " + ex.getMessage());
+                    }
+
+                });
+    }
 
 }//fragment

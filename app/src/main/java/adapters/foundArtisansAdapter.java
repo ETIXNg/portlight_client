@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.sirachlabs.portchlyt_services.R;
 import com.sirachlabs.portchlyt_services.ViewJobActivity;
+import com.sirachlabs.portchlyt_services.app;
 
 import java.util.List;
 
 import globals.globals;
 import models.mArtisan.mArtisan;
+import models.mJobs.mJobs;
 
 ///adapter for the artisan that have been found and displayed on the home/search screen
 public class foundArtisansAdapter extends RecyclerView.Adapter<foundArtisansAdapter.MyHolder> {
@@ -77,7 +79,9 @@ public class foundArtisansAdapter extends RecyclerView.Adapter<foundArtisansAdap
             @Override
             public void onClick(View view) {
                 Intent vj =  new Intent(ctx, ViewJobActivity.class);
-               // vj.putExtra("_job_id",);
+                mJobs job = app.db.mJobsDao().get_job_with_artisan(artisan.app_id);
+                vj.putExtra("_job_id",job._job_id);
+                ctx.startActivity(vj);
             }
         });
 

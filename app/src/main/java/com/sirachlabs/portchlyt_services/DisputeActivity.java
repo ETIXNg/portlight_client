@@ -167,6 +167,7 @@ public class DisputeActivity extends AppCompatActivity {
                         return;
                     } else {
                         try {
+                            Log.e(tag,result+": result");
                             JSONObject json = new JSONObject(result);
                             String res = json.getString("res");
                             String msg = json.getString("msg");
@@ -175,6 +176,10 @@ public class DisputeActivity extends AppCompatActivity {
                                 job.job_status = JobStatus.disputed.toString();
                                 app.db.mJobsDao().update_one(job);
                                 JobsFragment.refreshJobsAdapter();
+                            }
+                            else
+                            {
+                                Snackbar.make(linlay, getString(R.string.error_occured), Snackbar.LENGTH_SHORT).show();
                             }
                         } catch (Exception ex) {
                             Log.e(tag, ex.getMessage());
