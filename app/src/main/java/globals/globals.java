@@ -10,20 +10,20 @@ public class globals {
     public static String rave_flutter_wave_split_ratio = "0.15";
 
     //test
-    public static String rave_flutter_wave_public_key = "FLWPUBK-9d6d10c05d2fc18a035bd89738282539-X";
-    public static String rave_flutter_wave_encryption_key = "08f060ffbbecd3c6642cb789";
+    //public static String rave_flutter_wave_public_key = "FLWPUBK-9d6d10c05d2fc18a035bd89738282539-X";
+    //public static String rave_flutter_wave_encryption_key = "08f060ffbbecd3c6642cb789";
 
 
     //live
-    //public static String rave_flutter_wave_public_key="FLWPUBK-9d6d10c05d2fc18a035bd89738282539-X";
-    //public static String rave_flutter_wave_encryption_key="08f060ffbbecd3c6642cb789";
+    public static String rave_flutter_wave_public_key="FLWPUBK-51608cec6efafcfea89de8a19ce9ae14-X";
+    public static String rave_flutter_wave_encryption_key="8affddf7e942c03b8c6ba499";
 
 
     //online settings
-    final static String mqtt_server = "tcp://18.222.225.98:1883";
-    public static String base_url="http://18.222.225.98:1111/apiService";
+    final static String mqtt_server = "tcp://etixng.com:1883";
+    public static String base_url="http://etixng.com:1000/apiService";
 
-    //offline settings
+    //offline settingsd
 //    final static String mqtt_server = "tcp://192.168.4.1:1883";
 //    public static String base_url = "http://192.168.4.1:1111/apiService";
 

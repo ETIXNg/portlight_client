@@ -33,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
     ProgressDialog pd;
     EditText txt_mobile;
     Toolbar mtoolbar;
+    String tag="RegisterActivity";
 
 
     @Override
@@ -104,6 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
                     .setBodyParameter("data", sdata)//add the client as a parameter
                     .asString()
                     .setCallback((e, result) -> {
+                        //Log.e(tag,sdata);
                             pd.hide();
                             if(e!=null){
                                 Toast.makeText(RegisterActivity.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();

@@ -71,7 +71,8 @@ public class CardPaymentActivity extends AppCompatActivity {
 
         try {
 
-            new RavePayManager(CardPaymentActivity.this).setAmount(amount)
+            new RavePayManager(CardPaymentActivity.this)
+                    .setAmount(amount)
                     .setCountry(country)
                     .setCurrency(currency)
                     .setEmail(email)
@@ -87,7 +88,7 @@ public class CardPaymentActivity extends AppCompatActivity {
                     .acceptAchPayments(false)
                     .acceptGHMobileMoneyPayments(false)
                     .acceptUgMobileMoneyPayments(false)
-                    .onStagingEnv(true)
+                    .onStagingEnv(false)
                     //.allowSaveCardFeature(false)
                     //.setMeta(List < Meta >)
                     .withTheme(R.style.RaveFlutterWave)

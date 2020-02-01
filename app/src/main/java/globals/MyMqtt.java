@@ -68,8 +68,8 @@ public class MyMqtt extends Service {
         mqttClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
-                subscribeToTopic("general_updates", 1);//subscription for general updates
-                subscribeToTopic(clientId, 1);//this subscription is for the communication between the server and this client use a different topic for those messages wich do not require realtime, since this one requires real time it must subscribe to qos 0
+                subscribeToTopic("general_updates", 2);//subscription for general updates
+                subscribeToTopic(clientId, 2);//this subscription is for the communication between the server and this client use a different topic for those messages wich do not require realtime, since this one requires real time it must subscribe to qos 0
             }
 
             @Override
@@ -204,7 +204,7 @@ public class MyMqtt extends Service {
                             app.db.taskDao().insert_one(task);
                         }
                         ViewJobActivity.getTheJob();
-                        create_notification(app.ctx.getString(R.string.bill_updated));
+                        //create_notification(app.ctx.getString(R.string.bill_updated));
                     } catch (Exception ex) {
                         Log.e(tag, ex.getMessage());//only do the update provided this item is not null
                     }
