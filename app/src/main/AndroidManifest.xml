@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.sirachlabs.portchlyt_services">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,7 +18,8 @@
 
     <application
         android:name=".app"
-        android:allowBackup="true"
+        android:allowBackup="false"
+        tools:replace="android:allowBackup"
         android:configChanges="orientation"
         android:icon="@drawable/p_logo"
         android:installLocation="preferExternal"
